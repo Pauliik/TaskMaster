@@ -12,3 +12,9 @@ class UserRegistrationForm(UserCreationForm):
         model = User
         fields = UserCreationForm.Meta.fields + ('email',)
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email and User.objects.filter(email=email).exists():
+            raise ValidationError('Пользователь с таким адресом электронной почты уже существует.')
+        return email
+

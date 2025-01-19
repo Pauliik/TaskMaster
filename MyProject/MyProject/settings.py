@@ -141,3 +141,6 @@ EMAIL_PORT = 587                # Порт SMTP сервера
 EMAIL_USE_TLS = True            # Использовать TLS
 EMAIL_HOST_USER = 'pasha@inbox.ru' # ваш email
 EMAIL_HOST_PASSWORD = 'dgeV0ryJYV5EUXEBegAr'  # Пароль приложения 
+DEFAULT_FROM_EMAIL = 'pasha@inbox.ru' # Адрес, с которого будут отправляться письма
+SERVER_EMAIL = 'pasha@inbox.ru' # Адрес для отправки сообщений об ошибках
+

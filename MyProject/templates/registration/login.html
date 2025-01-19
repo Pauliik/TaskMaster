@@ -7,7 +7,7 @@
 </head>
 <body>
     <h2>Вход</h2>
-    <a class="nav-link" href="{% url 'reset_password' %}">Забыли пароль?</a>
+    <a class="nav-link" href="{% url 'password_reset' %}">Забыли пароль?</a>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
