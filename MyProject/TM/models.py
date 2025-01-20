@@ -1,3 +1,91 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
+
+class Project(models.Model):
+    name = models.CharField(max_lenghth = 255, vrbose_name = 'Название проекта')
+    description = models.TextField(blank =True, verbose_name = 'Описание проекта')
+    end_date = models.DateField(null = True, blank = True, verbose_name = 'Дфта окончания')
+    creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'created_projects', verbose_name = 'Создатель')
+    date_creation = models.DateTimeField(auto_now_add=True, verbose_name = 'Дата создания')
+
+    class Meta:
+        verbose_name = 'Проект'
+        verbose_name_plural = 'Проекты'
+
+    def __str__(self):
+        return self.name
+    
+    
+
+class Task(models.Model):
+    PRIORITY = [ 
+        ('high', 'Высокий'),
+        ('medium', 'Средний'),
+        ('low', 'Низкий')
+    ]
+
+    ACCOMPLISHMENTS_STATUS = [   # СТАТУС ДОСТИЖЕНИЙ
+        ('in_progress', 'в работе'),
+        ('on_review', 'На проверке'),
+        ('completed', 'Выполнена'),
+        ('canceled', 'Отменена')
+    ]
+
+    project = models.ForeigKey(Project, on_delete = models.CASCADE, related_name = 'tasks', verbose_name = 'Проект')
+    name_task = models.Charfield(max_length= 255, verbose_name = 'Название задачи')
+    description = models.TextField(blank= True, verbose_name = 'Опмсание задачи')
+    priority = models.CharField(max_length = 15, choices = PRIORITY, default = 'medium', verbose_name = 'Приоритет')
+    due_date = models.DateField(null = True, blank = True, verbose_name = 'Срок выполнения')
+    status = models.CharField(max_length = 20, choices = ACCOMPLISHMENTS_STATUS, defaulr = 'in_progress', verbose_name = 'Статус')
+    executor = models.ForeignKey(User, on_delete = models.SET_NULL, null = True, blank = True, related_name = 'assigned_tasks', verbose_name = 'Исполнитель')
+    creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'created_tasks', verbose_name = 'Создатель')
+    date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Дата создания')
+    date_update = models.DateTimeField(auto_now = True, verbose_name = 'Дата обновления')
+
+    class Meta:
+        verbase_name = 'Задача'
+        verbose_name_plural = 'Задачи'
+
+    def __str__(self):
+        return self.name_task
+    
+class TaskComment(models.Model):
+    task = models.ForeignKey(Task, on_delete = models.CASCADE, related_name = 'comments', verbose_name = 'Задфчв')
+    author_comment = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name = 'Автор комментария')
+    comment_text = models.TextField(verbose_name = 'Текст коментария')
+    date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Дата создания')
+
+    class Meta:
+        vebose_name = 'Комментарий к задаче'
+        verbose_name_plural = 'Комментарии к задаче'
+
+    def __str__(self):
+        return f'Коментарий оставил {self.user.username} к задаче {self.task.name_task}'
+    
+class FileTask(models.Model):
+    task = models.ForeignKey(Task, on_delete = models.CASCADE, related_name = 'fileTasks', verbose_name = 'Задача')
+    file = models.FileField(upload_to = 'task_attachments/', verbose_name = 'Файл')
+    sender = models.ForeignKey(User, on_delete = models.SET_NULL, null = True, blank = True, related_name = 'sender_fileTasks', verbose_name = 'Отправитель')
+    date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Дата создания')
+
+    class Meta:
+        verbose_name = 'Вложение'
+        verbose_name_plural = 'Вложения'
+
+    def __str__(self):
+        return self.file.name # Должен вкрнуть имя файла ????
+
+class Subtask(models.Model):
+    task = models.ForeignKey(Task, on_delete = models.CASCADE, related_name = 'subtasks', verbose_name = 'Задача')
+    name_subtask_task = models.CharField(max_length = 255, verbose_name = 'Название подзадачи')
+    status = models.BooleanField(defauld = False, verbose_name = 'Статус выполнения')
+    date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Дата создания')
+
+    class Meta:
+        verbose_name = 'Подзадача'
+        verbose_name_plural = 'Подзадачи'
+
+    def __str__(self):
+        return self.name_subtask_task
+                             
