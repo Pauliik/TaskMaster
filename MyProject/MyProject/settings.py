@@ -132,15 +132,15 @@ LOGIN_REDIRECT_URL = '/main' # По умолчанию Django ищет стра�
 LOGOUT_REDIRECT_URL = '/' # По умолчанию Django ищет страницу выхода по адресу /accounts/logout/. но Теперь Django после выхода будет перенаправлять на главную страницу.
 
 
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # Используем SMTP для отправки
-EMAIL_HOST = 'smtp.inbox.ru'  # Ваш SMTP сервер
-EMAIL_PORT = 587                # Порт SMTP сервера
-EMAIL_USE_TLS = True            # Использовать TLS
-EMAIL_HOST_USER = 'pasha@inbox.ru' # ваш email
-EMAIL_HOST_PASSWORD = ''  # Пароль приложения 
-DEFAULT_FROM_EMAIL = 'pasha@inbox.ru' # Адрес, с которого будут отправляться письма
-SERVER_EMAIL = 'pasha@inbox.ru' # Адрес для отправки сообщений об ошибках
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # Используем SMTP для отправки
+#EMAIL_HOST = 'smtp.inbox.ru'  # Ваш SMTP сервер
+#EMAIL_PORT = 587                # Порт SMTP сервера
+#EMAIL_USE_TLS = True            # Использовать TLS
+#EMAIL_HOST_USER = 'pasha@inbox.ru' # ваш email
+#EMAIL_HOST_PASSWORD = ''  # Пароль приложения 
+#DEFAULT_FROM_EMAIL = 'pasha@inbox.ru' # Адрес, с которого будут отправляться письма
+#SERVER_EMAIL = 'pasha@inbox.ru' # Адрес для отправки сообщений об ошибках
 

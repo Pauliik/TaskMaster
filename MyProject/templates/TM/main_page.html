@@ -3,7 +3,37 @@
 {% block title %}Document main{% endblock %}
 
 {% block content %}
+    <h1>Список моих задач</h1>
+
     <div>
-        <p>Эта главная страница со всей информацией а пока пойду думать как должна выглядить БД</p>
+        {% if my_task %}
+            
+                {% for task in my_task %}  
+                
+                    <div>
+                        <ul>
+                        <li>
+                            <h3>задачу относится к проекту {{ task.project }} </h3>
+                        </li>
+                        </ul>
+
+                        <ul>
+                        <ol>
+                            <li><h4>Название задачи {{ task.name_task }}</h4></li>
+                            <li><h4>Опмсание задачи {{ task.description }}</h4></li>
+                            <li><h4>Приоритет {{ task.priority }}</h4></li>
+                            <li><h4>Статус {{ task.status }}</h4></li>
+                            <li><h4>Исполнитель {{ task.executor }}</h4></li>
+                            <li><h4>Срок выполнения {{ task.due_date }}</h4></li>
+                        </ol>
+                        </ul>
+                        
+                    </div> 
+                  
+                {% endfor %}  
+            
+        {% else %}
+            <p>У вас нет назначанных задач!!!</p>
+        {% endif %}
     </div>
 {% endblock %}

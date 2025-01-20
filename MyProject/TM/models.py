@@ -16,8 +16,6 @@ class Project(models.Model):
     def __str__(self):
         return self.name
     
-    
-
 class Task(models.Model):
     PRIORITY = [ 
         ('high', 'Высокий'),
@@ -84,8 +82,8 @@ class FileTask(models.Model):
     date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Дата создания')
 
     class Meta:
-        verbose_name = 'Вложение'
-        verbose_name_plural = 'Вложения'
+        verbose_name = 'Файл для задачи'
+        verbose_name_plural = 'Файлы для задачи'
 
     def __str__(self):
         return self.file.name # Должен вкрнуть имя файла ????
