@@ -34,5 +34,19 @@ class New_projectTask_forms(forms.ModelForm):
             'due_date': forms.DateInput(attrs = {'type': 'date'}),
         }
 
+class New_task_forms(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['project', 'name_task', 'description', 'priority', 'status', 'executor', 'due_date']
+        widgets = {
+            'due_date': forms.DateInput(attrs = {'type': 'date'}),
+        }
+
+class New_sub_forms(forms.ModelForm):
+    class Meta:
+        model = Sub
+        fields = ['name_sub', 'description']
+        #widgets = {}
+
         
 

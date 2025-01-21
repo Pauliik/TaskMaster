@@ -9,21 +9,26 @@
 
             <div>
                 <ul>
-                <li>
-                    <h3>задачу относится к проекту {{ task.project }} </h3>
-                </li>
+                    <li>
+                        <h3>задачу относится к проекту {{ task.project }} </h3>
+                    </li>
                 </ul>
 
                 <ul>
-                <ol>
-                    <li><h4>Название задачи {{ task.name_task }}</h4></li>
-                    <li><h4>Опмсание задачи {{ task.description }}</h4></li>
-                    <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
-                    <li><h4>Статус {{ task.get_status_display }}</h4></li>
-                    <li><h4>Исполнитель {{ task.executor }}</h4></li>
-                    <li><h4>Срок выполнения {{ task.due_date }}</h4></li>
-                    <a href = "{% url 'new_subtask' %}">Создать новую подзадачу</a>
-                </ol>
+                    <ol>
+                        <li><h4>Название задачи {{ task.name_task }}</h4></li>
+                        <li><h4>Опмсание задачи {{ task.description }}</h4></li>
+                        <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
+                        <li><h4>Статус {{ task.get_status_display }}</h4></li>
+                        <li><h4>Исполнитель {{ task.executor }}</h4></li>
+                        <li><h4>Срок выполнения {{ task.due_date }}</h4></li>
+                        <a href = "{% url 'new_sub' %}">Создать новую подзадачу</a>
+                    </ol>
+                </ul>
+                <ul>
+                    <ol>
+                        
+                    </ol>
                 </ul>
                 
             </div> 

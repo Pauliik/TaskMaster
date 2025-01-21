@@ -57,15 +57,39 @@ def new_project(request):
 
 # Создания новой задачи для проекта
 def new_task(request):
-    return render(request, 'TM/new_task.html')
+    if request.method == 'POST':
+        form = New_task_forms(request.POST)
+        if form.is_valid():
+            task = form.save()
+            messages.success(request, 'Успешно сохранено')
+            return render(request, 'TM/new_task.html', {'form': form})
+    form = New_task_forms()
+
+    return render(request, 'TM/new_task.html', {'form': form})
 
 # Задачи которые я делаю
 def tasksIDo(request):
-    return render(request, 'TM/tasksIdo.html')
+    if request.user.is_authenticated:
+        my_task = Task.objects.filter(executor = request.user)
+        return render(request, 'TM/tasksIDo.html', {'my_task': my_task})
+
+    
 
 # Создание новой подзадачи
-def new_subtask(request):
-    return render(request, 'TM/new_subtask.html')
+def new_sub(request):
+    if request.method == 'POST':
+        form = New_sub_forms(request.POST)
+        if form.is_valid():
+            subtask = form.save(commit=False)
+            if request.user.is_authenticated:
+                subtask.creator = request.user
+            messages.success(request, 'Успешно сохранено')
+            return render(request, 'TM/new_task.html', {'form': form})
+    else:
+        form = New_sub_forms()
+
+    return render(request, 'TM/new_task.html', {'form': form})
+    
 
 # мои собственные задачи
 def my_own_task(request):

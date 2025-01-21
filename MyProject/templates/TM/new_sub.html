@@ -1,0 +1,41 @@
+{% extends 'TM/base.html' %}
+
+{% block title %}Document main{% endblock %}
+
+{% block content %}
+    <form method = 'post'>
+        {% csrf_token %}
+        <div>
+            <p>dfguihdfsuighsdfuioghiuserfg</p>
+            <div>
+                <label for = '{{ form.name_subtask.id_for_label }}'>{{ form.name.label }}</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div>
+                        {{ form.name.errors.as_text }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for = '{{ form.description.id_for_label }}'>{{ form.description.label }}</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <div>
+                        {{ form.description.errors.as_text }}
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+        <button type = 'submit'>Сохранить</button>
+    </form>
+
+    {% if messages %}
+        <ul class = 'messages'>
+            {% for message in messages %}
+                <li {% if message.tags %} class = '{{ message.tags }}' {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

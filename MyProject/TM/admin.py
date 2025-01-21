@@ -11,9 +11,9 @@ class TaskAdmin(admin.ModelAdmin):
     list_display = ('project', 'name_task', 'description', 'priority', 'status', 'executor', 'due_date', 'date_creation', 'date_update')
     search_fields = ('project', 'executor')
 
-@admin.register(Subtask)
-class SubtaskAdmin(admin.ModelAdmin):
-    list_display = ('task', 'name_subtask', 'creator', 'status', 'date_creation')
+@admin.register(Sub)
+class SubAdmin(admin.ModelAdmin):
+    list_display = ('task', 'name_sub', 'description', 'creator', 'status', 'date_creation')
     search_fields = ('task',)
 
 @admin.register(TaskComment)
