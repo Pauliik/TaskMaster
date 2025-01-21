@@ -8,11 +8,11 @@
         <div>
             <p>dfguihdfsuighsdfuioghiuserfg</p>
             <div>
-                <label for = '{{ form.name_subtask.id_for_label }}'>{{ form.name.label }}</label>
-                {{ form.name }}
-                {% if form.name.errors %}
+                <label for = '{{ form.name_sub.id_for_label }}'>{{ form.name_sub.label }}</label>
+                {{ form.name_sub }}
+                {% if form.name_sub.errors %}
                     <div>
-                        {{ form.name.errors.as_text }}
+                        {{ form.name_sub.errors.as_text }}
                     </div>
                 {% endif %}
             </div>

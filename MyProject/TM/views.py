@@ -1,10 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.views import PasswordResetView
 
-from .forms import UserRegistrationForm
 from .models import *
 from .forms import *
 
@@ -71,24 +70,30 @@ def new_task(request):
 def tasksIDo(request):
     if request.user.is_authenticated:
         my_task = Task.objects.filter(executor = request.user)
-        return render(request, 'TM/tasksIDo.html', {'my_task': my_task})
+        task_subtask = Subtask.objects.filter(creator = request.user)
+        return render(request, 'TM/tasksIDo.html', {'my_task': my_task, 'task_subtask': task_subtask})
 
     
 
 # Создание новой подзадачи
-def new_sub(request):
+def new_subtask(request, task_id):
+    task = get_object_or_404(Task, id = task_id)
+    print(task)
+    
     if request.method == 'POST':
-        form = New_sub_forms(request.POST)
+        form = New_subtask_forms(request.POST)
         if form.is_valid():
             subtask = form.save(commit=False)
             if request.user.is_authenticated:
+                subtask.task = task
                 subtask.creator = request.user
+                subtask.save()
             messages.success(request, 'Успешно сохранено')
-            return render(request, 'TM/new_task.html', {'form': form})
+            return redirect(reverse('new_subtask', kwargs={'task_id': task.id}))
     else:
-        form = New_sub_forms()
+        form = New_subtask_forms()
 
-    return render(request, 'TM/new_task.html', {'form': form})
+    return render(request, 'TM/new_subtask.html', {'form': form})
     
 
 # мои собственные задачи

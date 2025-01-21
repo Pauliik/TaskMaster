@@ -12,7 +12,7 @@ urlpatterns = [
     path('NewTask', views.new_task, name = 'new_task'),
     path('NewProject', views.new_project, name = 'new_project'),
     path('tasksIDo', views.tasksIDo, name = 'tasksIDo'),
-    path('NewSubtask', views.new_sub, name = 'new_sub'),
+    path('NewSubtask/<int:task_id>/', views.new_subtask, name = 'new_subtask'),
     path('MyOwnTask', views.my_own_task, name = 'my_own_task'),
     path('NewMyTask', views.new_my_task, name = 'new_my_task'),
 

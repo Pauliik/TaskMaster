@@ -42,9 +42,9 @@ class New_task_forms(forms.ModelForm):
             'due_date': forms.DateInput(attrs = {'type': 'date'}),
         }
 
-class New_sub_forms(forms.ModelForm):
+class New_subtask_forms(forms.ModelForm):
     class Meta:
-        model = Sub
+        model = Subtask
         fields = ['name_sub', 'description']
         #widgets = {}
 

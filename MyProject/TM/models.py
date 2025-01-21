@@ -48,11 +48,11 @@ class Task(models.Model):
     def __str__(self):
         return self.name_task
     
-class Sub(models.Model):
-    task = models.ForeignKey(Task, on_delete = models.CASCADE, related_name = 'sub', verbose_name = 'Задача')
+class Subtask(models.Model):
+    task = models.ForeignKey(Task, on_delete = models.CASCADE, related_name = 'subtask', verbose_name = 'Задача')
     name_sub = models.CharField(max_length = 255, verbose_name = 'Название подзадачи')
     description = models.TextField(null = True, blank= True, verbose_name = 'Опмсание задачи')
-    creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'creator_sub', verbose_name = 'Создатель')
+    creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'creator_subtask', verbose_name = 'Создатель')
     status = models.BooleanField(default = False, verbose_name = 'Статус выполнения')
     date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Дата создания')
 
