@@ -37,19 +37,23 @@ def register_user(request):
 # Создание ного проекта
 def new_project(request):
     if request.method == 'POST':
-        form = new_project_forms(request.POST)
-        if form.is_valid():
-            project = form.save(commit=False)
+        project_form = New_project_forms(request.POST)
+        task_form = New_projectTask_forms(request.POST)
+        if project_form.is_valid() and task_form.is_valid():
+            project = project_form.save(commit=False)
             if request.user.is_authenticated:
                 project.creator = request.user
-
             project.save()
+            task = task_form.save(commit=False)
+            task.project = project
+            task.save()
             print('Сохранино')
             messages.success(request, 'Успешно сохранено')
             return redirect(reverse('new_project'))
     else:
-        form = new_project_forms()
-    return render(request, 'TM/new_project.html', {'form': form})
+        project_form = New_project_forms()
+        task_form = New_projectTask_forms()
+    return render(request, 'TM/new_project.html', {'project_form': project_form, 'task_form': task_form})
 
 # Создания новой задачи для проекта
 def new_task(request):

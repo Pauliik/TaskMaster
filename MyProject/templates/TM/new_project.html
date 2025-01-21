@@ -15,34 +15,99 @@
             </div>
 
             <div>
-                <label for = '{{ form.name.id_for_label }}'>{{ form.name.label }}</label>
-                {{ form.name }}
-                {% if form.name.errors %}
-                    <div>
-                        {{ form.name.errors.as_text }}
-                    </div>
-                {% endif %}
+                <div>
+                    <label for = '{{ project_form.name.id_for_label }}'>{{ project_form.name.label }}</label>
+                    {{ project_form.name }}
+                    {% if project_form.name.errors %}
+                        <div>
+                            {{ project_form.name.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for = '{{ project_form.description.id_for_label }}'>{{ project_form.description.label }}</label>
+                    {{ project_form.description }}
+                    {% if project_form.description.errors %}
+                        <div>
+                            {{ project_form.description.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for = '{{ project_form.end_date.id_for_label }}'>{{ project_form.end_date.label }}</label>
+                    {{ project_form.end_date }}
+                    {% if project_form.end_date.errors %}
+                        <div>
+                            {{ project_form.end_date.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
             </div>
 
             <div>
-                <label for = '{{ form.description.id_for_label }}'>{{ form.description.label }}</label>
-                {{ form.description }}
-                {% if form.description.errors %}
-                    <div>
-                        {{ form.description.errors.as_text }}
-                    </div>
-                {% endif %}
+                <div>
+                    <label for = '{{ task_form.name_task.id_for_label }}'>{{ task_form.name_task.label }}</label>
+                    {{ task_form.name_task }}
+                    {% if task_form.name_task.errors %}
+                        <div>
+                            {{ task_form.name_task.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for = '{{ task_form.description.id_for_label }}'>{{ task_form.description.label }}</label>
+                    {{ task_form.description }}
+                    {% if task_form.description.errors %}
+                        <div>
+                            {{ task_form.description.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for = '{{ task_form.priority.id_for_label }}'>{{ task_form.priority.label }}</label>
+                    {{ task_form.priority }}
+                    {% if task_form.priority.errors %}
+                        <div>
+                            {{ task_form.priority.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for = '{{ task_form.status.id_for_label }}'>{{ task_form.status.label }}</label>
+                    {{ task_form.status }}
+                    {% if task_form.status.errors %}
+                        <div>
+                            {{ task_form.status.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for = '{{ task_form.executor.id_for_label }}'>{{ task_form.executor.label }}</label>
+                    {{ task_form.executor }}
+                    {% if task_form.executor.errors %}
+                        <div>
+                            {{ task_form.executor.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for = '{{ task_form.due_date.id_for_label }}'>{{ task_form.due_date.label }}</label>
+                    {{ task_form.due_date }}
+                    {% if task_form.due_date.errors %}
+                        <div>
+                            {{ task_form.due_date.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
             </div>
 
-            <div>
-                <label for = '{{ form.end_date.id_for_label }}'>{{ form.end_date.label }}</label>
-                {{ form.end_date }}
-                {% if form.end_date.errors %}
-                    <div>
-                        {{ form.end_date.errors.as_text }}
-                    </div>
-                {% endif %}
-            </div>
             <button type = 'submit'>Сохранить</button>
         </div>
     </form>

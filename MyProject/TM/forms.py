@@ -18,7 +18,7 @@ class UserRegistrationForm(UserCreationForm):
             raise ValidationError('Пользователь с таким адресом электронной почты уже существует.')
         return email
     
-class new_project_forms(forms.ModelForm):
+class New_project_forms(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['name', 'description', 'end_date']
@@ -26,6 +26,13 @@ class new_project_forms(forms.ModelForm):
             'end_date': forms.DateInput(attrs = {'type': 'date'}),
         }
 
+class New_projectTask_forms(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = [ 'name_task', 'description', 'priority', 'status', 'executor', 'due_date']
+        widgets = {
+            'due_date': forms.DateInput(attrs = {'type': 'date'}),
+        }
 
         
 
