@@ -37,7 +37,7 @@ class Task(models.Model):
     status = models.CharField(max_length = 20, choices = ACCOMPLISHMENTS_STATUS, default = 'in_progress', verbose_name = 'Статус')
     executor = models.ForeignKey(User, on_delete = models.SET_NULL, null = True, blank = True, related_name = 'assigned_tasks', verbose_name = 'Исполнитель')
     due_date = models.DateField(null = True, blank = True, verbose_name = 'Срок выполнения')
-    creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'created_tasks', verbose_name = 'Создатель')
+    #creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'created_tasks', verbose_name = 'Создатель')
     date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Дата создания')
     date_update = models.DateTimeField(auto_now = True, verbose_name = 'Дата обновления')
 
@@ -51,6 +51,7 @@ class Task(models.Model):
 class Subtask(models.Model):
     task = models.ForeignKey(Task, on_delete = models.CASCADE, related_name = 'subtasks', verbose_name = 'Задача')
     name_subtask = models.CharField(max_length = 255, verbose_name = 'Название подзадачи')
+    creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'creator_subtasks', verbose_name = 'Создатель')
     status = models.BooleanField(default = False, verbose_name = 'Статус выполнения')
     date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Дата создания')
 
@@ -59,7 +60,7 @@ class Subtask(models.Model):
         verbose_name_plural = 'Подзадачи'
 
     def __str__(self):
-        return self.name_subtask_task
+        return self.name_subtask
     
 class TaskComment(models.Model):
     task = models.ForeignKey(Task, on_delete = models.CASCADE, related_name = 'comments', verbose_name = 'Задфчв')
@@ -87,4 +88,39 @@ class FileTask(models.Model):
 
     def __str__(self):
         return self.file.name # Должен вкрнуть имя файла ????
+    
+class Mytask(models.Model):
+    PRIORITY = [ 
+        ('high', 'Высокий'),
+        ('medium', 'Средний'),
+        ('low', 'Низкий')
+    ]
+    name_task = models.CharField(max_length= 255, verbose_name = 'Название задачи')
+    description = models.TextField(blank= True, verbose_name = 'Опмсание задачи')
+    priority = models.CharField(max_length = 15, choices = PRIORITY, default = 'medium', verbose_name = 'Приоритет')
+    due_date = models.DateField(null = True, blank = True, verbose_name = 'Срок выполнения')
+    creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'mytask', verbose_name = 'Создатель')
+    date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Дата создания')
+    date_update = models.DateTimeField(auto_now = True, verbose_name = 'Дата обновления')
+
+    class Meta:
+        verbose_name = 'Моя задача'
+        verbose_name_plural = 'Мои задачи'
+
+    def __str__(self):
+        return self.name_task
+    
+class Mysubtask(models.Model):
+    task = models.ForeignKey(Task, on_delete = models.CASCADE, related_name = 'mysubtasks', verbose_name = 'Задача')
+    name_subtask = models.CharField(max_length = 255, verbose_name = 'Название подзадачи')
+    creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'creator_mysubtasks', verbose_name = 'Создатель')
+    status = models.BooleanField(default = False, verbose_name = 'Статус выполнения')
+    date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Дата создания')
+
+    class Meta:
+        verbose_name = 'моя подзадача'
+        verbose_name_plural = 'Мои подзадачи'
+
+    def __str__(self):
+        return self.name_subtask
                                

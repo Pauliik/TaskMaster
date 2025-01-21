@@ -6,15 +6,50 @@
     <title>{% block title %}Document{% endblock %}</title>
 </head>
 <body>
-    <div>
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit" >Выйти</button>
-        </form>
-    </div>
-    <div>
-        {% block content %}
-        {% endblock %}
-    </div>
+    {% if request.user.is_authenticated %}
+        <nav>
+            <div>
+                <ul>
+                    <li>
+                        <span>Привет, {{ request.user.username }}!!!</span>
+                    </li>
+                    <li>
+                        <a href = "{% url 'settings' %}">Настройки</a>
+                    </li>
+                    {% if request.user.is_staff %}
+                        <li>
+                            <a href = "{% url 'new_task' %}">Создать новую задачу к проекту</a>
+                        </li>
+                        <li>
+                            <a href = "{% url 'new_project' %}">Создать новый проект</a>
+                        </li>                        
+                    {% else %}
+                        <li>
+                            <a href = "{% url 'tasksIDo' %}">Задачи которыя я делаю для прокта (проектов)</a>
+                        </li>
+                        <li>
+                            <a href = "{% url 'new_my_task' %}">Создать собственную задачу</a>
+                        </li>
+                        <li>
+                            <a href = "{% url 'my_own_task' %}">Мои личные задачи</a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" >Выйти</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div>
+            {% block content %}
+            {% endblock %}
+        </div>
+    {% else %}
+        <p>Что бы зайти на эту страницу вам нужно ввойти в свой профиль</p>
+        <a href="{% url 'login' %}">Вход в профиль</a>
+    {% endif %}
 </body>
 </html>

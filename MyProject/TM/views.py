@@ -9,8 +9,11 @@ from .models import *
 
 # Функция для главной страницы 
 def main_page(request):
-    my_task = Task.objects.filter(executor = request.user)
-    return render(request, 'TM/main_page.html', {'my_task': my_task})
+    if request.user.is_authenticated:
+        my_task = Task.objects.filter(executor = request.user)
+        return render(request, 'TM/main_page.html', {'my_task': my_task})
+    else:
+        return render(request, 'TM/main_page.html')
 
 def introductoryPage(request):
     return render(request, 'TM/introductoryPage.html')
@@ -27,6 +30,38 @@ def register_user(request):
     else:
         form = UserRegistrationForm()
     return render(request, 'TM/register.html', {'form': form})
+
+# Настройки
+def settings(request):
+    return render(request, 'TM/settings.html')
+
+# Создания новой задачи для проекта
+def new_task(request):
+    return render(request, 'TM/new_task.html')
+
+# Создание ного проекта
+def new_project(request):
+    return render(request, 'TM/new_project.html')
+
+# Задачи которые я делаю
+def tasksIDo(request):
+    return render(request, 'TM/tasksIdo.html')
+
+# Создание новой подзадачи
+def new_subtask(request):
+    return render(request, 'TM/new_subtask.html')
+
+# мои собственные задачи
+def my_own_task(request):
+    return render(request, "TM/my_own_task.html")
+
+# Создаем собственную задачу
+def new_my_task(request):
+    return render(request, "TM/new_my_task.html")
+
+
+
+
 
 # Не знаю зачем пока это нужно, скорее всего уберу 
 class CustomPasswordResetView(PasswordResetView):
