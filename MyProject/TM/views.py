@@ -6,6 +6,7 @@ from django.contrib.auth.views import PasswordResetView
 
 from .forms import UserRegistrationForm
 from .models import *
+from .forms import *
 
 # Функция для главной страницы 
 def main_page(request):
@@ -27,21 +28,32 @@ def register_user(request):
             login(request, user)
             messages.success(request, f'Вы успешно зарегистрировались!!')
             return redirect(reverse('main_page'))
+        else:
+            print(f"Form errors: {form.errors}")
     else:
         form = UserRegistrationForm()
     return render(request, 'TM/register.html', {'form': form})
 
-# Настройки
-def settings(request):
-    return render(request, 'TM/settings.html')
+# Создание ного проекта
+def new_project(request):
+    if request.method == 'POST':
+        form = new_project_forms(request.POST)
+        if form.is_valid():
+            project = form.save(commit=False)
+            if request.user.is_authenticated:
+                project.creator = request.user
+
+            project.save()
+            print('Сохранино')
+            messages.success(request, 'Успешно сохранено')
+            return redirect(reverse('new_project'))
+    else:
+        form = new_project_forms()
+    return render(request, 'TM/new_project.html', {'form': form})
 
 # Создания новой задачи для проекта
 def new_task(request):
     return render(request, 'TM/new_task.html')
-
-# Создание ного проекта
-def new_project(request):
-    return render(request, 'TM/new_project.html')
 
 # Задачи которые я делаю
 def tasksIDo(request):
@@ -59,8 +71,9 @@ def my_own_task(request):
 def new_my_task(request):
     return render(request, "TM/new_my_task.html")
 
-
-
+# Настройки
+def settings(request):
+    return render(request, 'TM/settings.html')
 
 
 # Не знаю зачем пока это нужно, скорее всего уберу 

@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 
 class Project(models.Model):
     name = models.CharField(max_length = 255, unique = True, verbose_name = 'Название проекта')
-    description = models.TextField(blank =True, verbose_name = 'Описание проекта')
-    end_date = models.DateField(null = True, blank = True, verbose_name = 'Дфта окончания')
+    description = models.TextField(verbose_name = 'Описание проекта')
+    end_date = models.DateField(verbose_name = 'Дфта окончания')
     creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'created_projects', verbose_name = 'Создатель')
     date_creation = models.DateTimeField(auto_now_add=True, verbose_name = 'Дата создания')
 
