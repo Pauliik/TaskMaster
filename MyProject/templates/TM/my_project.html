@@ -12,7 +12,7 @@
                         <h3>описание проекта {{ project.description }} </h3>
                         <h3>описание проекта {{ project.end_date }} </h3>
                     </li>
-                
+                    <a href = "{% url 'edit_project' project.id %}">Редактировать проект</a>
                 {% for task in project.tasks.all %}
                     <ul>
                         <li><h4>Название задачи {{ task.name_task }}</h4></li>
@@ -25,15 +25,12 @@
                             <li><h4>исполнитель {{ task.executor }}</h4></li>
                             <li><h4>Срок выполнения {{ task.due_date }}</h4></li>           
                         </ol>
-                        
+                        <a href = "{% url 'edit_task' task.id %}">Редактировать задачу</a>
                     </ul>
-                
                 {% endfor %}
                 </ul>
             </div> 
-        <a href = "{% url 'edit_project' project.id %}">Редактировать проект</a>
         {% endfor %}  
-
     {% else %}
         <p>У вас нет назначанных задач!!!</p>
     {% endif %}

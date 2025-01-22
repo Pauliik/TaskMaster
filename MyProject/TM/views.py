@@ -47,7 +47,7 @@ def new_project(request):
             task.project = project
             task.save()
             print('Сохранино')
-            messages.success(request, 'Успешно сохранено')
+            messages.success(request, f'Проект {project} успешно сохранен')
             return redirect(reverse('new_project'))
     else:
         project_form = New_project_forms()
@@ -59,8 +59,8 @@ def new_task(request):
     if request.method == 'POST':
         form = New_task_forms(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Успешно сохранено')
+            task = form.save()
+            messages.success(request, f'Задача {task} успешна сохранена')
             return render(request, 'TM/new_task.html', {'form': form})
     form = New_task_forms()
 
@@ -150,7 +150,6 @@ def edit_project(request, project_id):
     project = get_object_or_404(Project, id=project_id)
     
     if request.method == 'POST':
-
         project_form = New_project_forms(request.POST, instance=project) # instance=project Подставляет данные
         if project_form.is_valid():
             project_form.save()
@@ -161,7 +160,80 @@ def edit_project(request, project_id):
     else:
         project_form = New_project_forms(instance=project) 
 
-    return render(request, 'TM/edit_project.html', {'project_form': project_form,})
+    return render(request, 'Edit/edit_project.html', {'project_form': project_form,})
+
+# Редактирование задачи
+def edit_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    
+    if request.method == 'POST':
+        task_form = Edit_task_form(request.POST, instance=task) # instance=project Подставляет данные
+        if task_form.is_valid():
+            task_form.save()
+            messages.success(request, f'Проект {task.name_task} успешно обновлен')
+            return redirect(reverse('my_project'))
+        else:
+            messages.error(request, 'Произошла ошибка при обновлении проекта!')
+    else:
+        task_form = Edit_task_form(instance=task) 
+
+    return render(request, 'Edit/edit_task.html', {'task_form': task_form,})
+
+
+# Редактирование мои задачи
+def edit_my_task(request, task_id):
+    task = get_object_or_404(Mytask, id=task_id)
+    
+    if request.method == 'POST':
+        task_form = Edit_my_task_form(request.POST, instance=task) # instance=project Подставляет данные
+        if task_form.is_valid():
+            task_form.save()
+            messages.success(request, f'Проект {task.name_task} успешно обновлен')
+            return redirect(reverse('my_own_task'))
+        else:
+            messages.error(request, 'Произошла ошибка при обновлении проекта!')
+    else:
+        task_form = Edit_my_task_form(instance=task) 
+
+    return render(request, 'Edit/edit_my_task.html', {'task_form': task_form,})
+
+# Редактирование мои подзадачи для моих задочь
+def edit_mysubtask(request, subtask_id):
+    subtask = get_object_or_404(Mysubtask, id=subtask_id)
+    
+    if request.method == 'POST':
+        subtask_form = Edit_mysubtask_form(request.POST, instance=subtask) # instance=project Подставляет данные
+        if subtask_form.is_valid():
+            subtask_form.save()
+            messages.success(request, f'Проект {subtask.name_subtask} успешно обновлен')
+            return redirect(reverse('my_own_task'))
+        else:
+            messages.error(request, 'Произошла ошибка при обновлении проекта!')
+    else:
+        subtask_form = Edit_mysubtask_form(instance=subtask) 
+
+    return render(request, 'Edit/edit_mysubtask.html', {'subtask_form': subtask_form,})
+
+# Редактирование мои подзадачи
+def edit_subtask(request, subtask_id):
+    subtask = get_object_or_404(Subtask, id=subtask_id)
+    
+    if request.method == 'POST':
+        subtask_form = Edit_subtask_form(request.POST, instance=subtask) # instance=project Подставляет данные
+        if subtask_form.is_valid():
+            subtask_form.save()
+            messages.success(request, f'Проект {subtask.name_sub} успешно обновлен')
+            return redirect(reverse('tasksIDo'))
+        else:
+            messages.error(request, 'Произошла ошибка при обновлении проекта!')
+    else:
+        subtask_form = Edit_subtask_form(instance=subtask) 
+
+    return render(request, 'Edit/edit_subtask.html', {'subtask_form': subtask_form,})
+
+
+
+
 
 
 

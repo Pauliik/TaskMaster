@@ -1,0 +1,48 @@
+{% extends 'TM/base.html' %}
+
+{% block title %}Document main{% endblock %}
+
+{% block content %}
+    <form method = 'post'>
+        {% csrf_token %}
+        <div>
+            <div>
+                <label for = '{{ subtask_form.name_subtask.id_for_label }}'>{{ subtask_form.name_subtask.label }}</label>
+                {{ subtask_form.name_subtask }}
+                {% if subtask_form.name_subtask.errors %}
+                    <div>
+                        {{ subtask_form.name_subtask.errors.as_text }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for = '{{ subtask_form.description.id_for_label }}'>{{ subtask_form.description.label }}</label>
+                {{ subtask_form.description }}
+                {% if subtask_form.description.errors %}
+                    <div>
+                        {{ subtask_form.description.errors.as_text }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for = '{{ subtask_form.status.id_for_label }}'>{{ subtask_form.status.label }}</label>
+                {{ subtask_form.status }}
+                {% if subtask_form.status.errors %}
+                    <div>
+                        {{ subtask_form.status.errors.as_text }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <button type = 'submit'>Сохранить</button>
+    </form>
+    {% if messages %}
+        <ul class = 'messages'>
+            {% for message in messages %}
+                <li {% if message.tags %} class = '{{ message.tags }}' {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

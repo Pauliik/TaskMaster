@@ -1,0 +1,52 @@
+{% extends 'TM/base.html' %}
+
+{% block title %}Document main{% endblock %}
+
+{% block content %}
+    <form method = 'post'>
+        {% csrf_token %}
+            <div>
+                <div>
+                    <label for = '{{ project_form.name.id_for_label }}'>{{ project_form.name.label }}</label>
+                    {{ project_form.name }}
+                    {% if project_form.name.errors %}
+                        <div>
+                            {{ project_form.name.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for = '{{ project_form.description.id_for_label }}'>{{ project_form.description.label }}</label>
+                    {{ project_form.description }}
+                    {% if project_form.description.errors %}
+                        <div>
+                            {{ project_form.description.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for = '{{ project_form.end_date.id_for_label }}'>{{ project_form.end_date.label }}</label>
+                    {{ project_form.end_date }}
+                    {% if project_form.end_date.errors %}
+                        <div>
+                            {{ project_form.end_date.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <button type = 'submit'>Сохранить</button>
+        </div>
+    </form>
+
+    {% if messages %}
+        <ul class = 'messages'>
+            {% for message in messages %}
+                <li {% if message.tags %} class = '{{ message.tags }}' {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+{% endblock %}

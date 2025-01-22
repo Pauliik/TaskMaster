@@ -1,0 +1,80 @@
+{% extends 'TM/base.html' %}
+
+{% block title %}Document main{% endblock %}
+
+{% block content %}
+    <form method = 'post'>
+        {% csrf_token %}
+            <div>
+                <div>
+                    <label for = '{{ task_form.name_task.id_for_label }}'>{{ task_form.name_task.label }}</label>
+                    {{ task_form.name_task }}
+                    {% if task_form.name_task.errors %}
+                        <div>
+                            {{ task_form.name_task.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for = '{{ task_form.description.id_for_label }}'>{{ task_form.description.label }}</label>
+                    {{ task_form.description }}
+                    {% if task_form.description.errors %}
+                        <div>
+                            {{ task_form.description.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for = '{{ task_form.priority.id_for_label }}'>{{ task_form.priority.label }}</label>
+                    {{ task_form.priority }}
+                    {% if task_form.priority.errors %}
+                        <div>
+                            {{ task_form.priority.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for = '{{ task_form.status.id_for_label }}'>{{ task_form.status.label }}</label>
+                    {{ task_form.status }}
+                    {% if task_form.status.errors %}
+                        <div>
+                            {{ task_form.status.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for = '{{ task_form.executor.id_for_label }}'>{{ task_form.executor.label }}</label>
+                    {{ task_form.executor }}
+                    {% if task_form.executor.errors %}
+                        <div>
+                            {{ task_form.executor.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for = '{{ task_form.due_date.id_for_label }}'>{{ task_form.due_date.label }}</label>
+                    {{ task_form.due_date }}
+                    {% if task_form.due_date.errors %}
+                        <div>
+                            {{ task_form.due_date.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>                
+
+            <button type = 'submit'>Сохранить</button>
+        </div>
+    </form>
+
+    {% if messages %}
+        <ul class = 'messages'>
+            {% for message in messages %}
+                <li {% if message.tags %} class = '{{ message.tags }}' {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

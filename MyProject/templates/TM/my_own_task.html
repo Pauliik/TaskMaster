@@ -3,15 +3,12 @@
 {% block title %}Document main{% endblock %}
 
 {% block content %}
-    {% if my_task %}
-                    
+    {% if my_task %}              
         {% for task in my_task %}  
-
             <div>
                 <ul>
                     <li>
-                        <h3>Название задачи {{ task.name_task }} </h3>
-                        
+                        <h3>Название задачи {{ task.name_task }} </h3>  
                     </li>
                 </ul>
 
@@ -20,29 +17,24 @@
                         <li><h4>Опмсание задачи {{ task.description }}</h4></li>
                         <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
                         <li><h4>Срок выполнения {{ task.due_date }}</h4></li>
+                        <a href = "{% url 'edit_my_task' task.id %}">Редактировать задачу</a>
                         {% for subtask in task.mysubtasks.all %}
-                                <ul>
-                                    <li><h4>Название подзадачи {{ subtask.name_subtask }}</h4></li>
-                                </ul>
-
-                                <ul>                                   
-                                    <ol>
-                                        <li><h4>Описание подзадачи {{ subtask.description }}</h4></li>
-                                        <li><h4>Статус подзадачи {{ subtask.status }}</h4></li>
-                                    </ol>
-                                </ul>
-
-                            
+                            <ul>
+                                <li><h4>Название подзадачи {{ subtask.name_subtask }}</h4></li>
+                            </ul>
+                            <ul>                                   
+                                <ol>
+                                    <li><h4>Описание подзадачи {{ subtask.description }}</h4></li>
+                                    <li><h4>Статус подзадачи {{ subtask.status }}</h4></li>
+                                </ol>
+                            </ul>
+                            <a href = "{% url 'edit_mysubtask' subtask.id %}">Редактировать подзадачу</a>
                         {% endfor %}
                         <a href = "{% url 'new_my_subtask' task.id %}">Создать новую подзадачу</a>
                     </ol>
                 </ul>
-                
-                
             </div> 
-
         {% endfor %}  
-
     {% else %}
         <p>У вас нет назначанных задач!!!</p>
     {% endif %}
