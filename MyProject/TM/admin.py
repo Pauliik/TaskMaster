@@ -33,7 +33,7 @@ class MytaskAdmin(admin.ModelAdmin):
 
 @admin.register(Mysubtask)
 class MysubtaskAdmin(admin.ModelAdmin):
-    list_display = ('task', 'name_subtask', 'creator', 'status', 'date_creation')
+    list_display = ('task', 'name_subtask', 'description', 'status', 'date_creation')
     search_fields = ('task', 'creator')
 
 

@@ -3,14 +3,13 @@
 {% block title %}Document main{% endblock %}
 
 {% block content %}
-    {% if my_task %}
-                
-        {% for task in my_task %}  
-
+    {% if my_task %}                
+        {% for task in my_task %} 
             <div>
                 <ul>
                     <li>
                         <h3>задачу относится к проекту {{ task.project }} </h3>
+                        <h3>описание проекта {{ task.project.description }} </h3>
                     </li>
                 </ul>
 
@@ -20,32 +19,26 @@
                         <li><h4>Опмсание задачи {{ task.description }}</h4></li>
                         <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
                         <li><h4>Статус {{ task.get_status_display }}</h4></li>
-                        <li><h4>Исполнитель {{ task.executor }}</h4></li>
                         <li><h4>Срок выполнения {{ task.due_date }}</h4></li>
-                        {% for subtask in task_subtask %}
-                            {% if subtask.task == task %}
-                                <ul>
-                                        <li><h4>Название подзадачи {{ subtask.name_sub }}</h4></li>
-                                </ul>
+                        {% for subtask in task.subtask.all %}                      
+                            <ul>
+                                <li><h4>Название подзадачи {{ subtask.name_sub }}</h4></li>
+                            </ul>
 
-                                <ul>
-                                    <ol>
-                                        <li><h4>Описание подзадачи {{ subtask.description }}</h4></li>
-                                        <li><h4>Статус подзадачи {{ subtask.status }}</h4></li>
-                                    </ol>
-                                </ul>
-
-                            {% endif %}
+                            <ul>
+                                <ol>
+                                    <li><h4>Описание подзадачи {{ subtask.description }}</h4></li>
+                                    <li><h4>Статус подзадачи {{ subtask.status }}</h4></li>
+                                </ol>
+                            </ul>
                         {% endfor %}
                         <a href = "{% url 'new_subtask' task.id %}">Создать новую подзадачу</a>
                     </ol>
                 </ul>
                 
                 
-            </div> 
-        
+            </div>         
         {% endfor %}  
-
     {% else %}
         <p>У вас нет назначанных задач!!!</p>
     {% endif %}

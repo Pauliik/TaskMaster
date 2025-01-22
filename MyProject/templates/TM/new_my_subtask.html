@@ -6,12 +6,13 @@
     <form method = 'post'>
         {% csrf_token %}
         <div>
+            <p>dfguihdfsuighsdfuioghiuserfg</p>
             <div>
-                <label for = '{{ form.name_task.id_for_label }}'>{{ form.name_task.label }}</label>
-                {{ form.name_task }}
-                {% if form.name_task.errors %}
+                <label for = '{{ form.name_subtask.id_for_label }}'>{{ form.name_subtask.label }}</label>
+                {{ form.name_subtask }}
+                {% if form.name_subtask.errors %}
                     <div>
-                        {{ form.name_task.errors.as_text }}
+                        {{ form.name_subtask.errors.as_text }}
                     </div>
                 {% endif %}
             </div>
@@ -22,26 +23,6 @@
                 {% if form.description.errors %}
                     <div>
                         {{ form.description.errors.as_text }}
-                    </div>
-                {% endif %}
-            </div>
-
-            <div>
-                <label for = '{{ form.priority.id_for_label }}'>{{ form.priority.label }}</label>
-                {{ form.priority }}
-                {% if form.priority.errors %}
-                    <div>
-                        {{ form.priority.errors.as_text }}
-                    </div>
-                {% endif %}
-            </div>
-
-            <div>
-                <label for = '{{ form.due_date.id_for_label }}'>{{ form.due_date.label }}</label>
-                {{ form.due_date }}
-                {% if form.due_date.errors %}
-                    <div>
-                        {{ form.due_date.errors.as_text }}
                     </div>
                 {% endif %}
             </div>

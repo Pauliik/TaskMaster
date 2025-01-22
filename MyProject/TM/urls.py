@@ -15,6 +15,10 @@ urlpatterns = [
     path('NewSubtask/<int:task_id>/', views.new_subtask, name = 'new_subtask'),
     path('MyOwnTask', views.my_own_task, name = 'my_own_task'),
     path('NewMyTask', views.new_my_task, name = 'new_my_task'),
+    path('NewMySubtask/<int:task_id>/', views.new_my_subtask, name = 'new_my_subtask'),
+    path('MyProject', views.my_project, name = 'my_project'),
+    path('EditProject/<int:project_id>/', views.edit_project, name = 'edit_project'),
+    #path('EditTask/<int:task_id>/', views.edit_task, name = 'edit_task'),
 
 
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
