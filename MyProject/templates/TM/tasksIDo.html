@@ -31,6 +31,7 @@
                                     <li><h4>Статус подзадачи {{ subtask.status }}</h4></li>
                                 </ol>
                             </ul>
+                            <a href = "{% url 'delete_subtask' subtask.id %}">Удалить подзадачу</a>
                             <a href = "{% url 'edit_subtask' subtask.id %}">Редактировать подзадачу</a>
                         {% endfor %}
                         <a href = "{% url 'new_subtask' task.id %}">Создать новую подзадачу</a>

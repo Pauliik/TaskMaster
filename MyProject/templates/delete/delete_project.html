@@ -1,0 +1,13 @@
+{% extends 'TM/base.html' %}
+
+{% block title %}Удаление проекта{% endblock %}
+
+{% block content %}
+    <h2>Удалить проект "{{ project.name }}"?</h2>
+    <p>Вы уверены, что хотите удалить проект "{{ project.name }}"? Это действие необратимо!</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Да, удалить</button>
+        <a href="{% url 'my_project' %}">Нет, отменить</a>
+    </form>
+{% endblock %}

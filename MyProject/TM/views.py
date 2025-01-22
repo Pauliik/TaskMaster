@@ -3,6 +3,7 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.views import PasswordResetView
+from django.http import HttpResponseForbidden
 
 from .models import *
 from .forms import *
@@ -179,7 +180,6 @@ def edit_task(request, task_id):
 
     return render(request, 'Edit/edit_task.html', {'task_form': task_form,})
 
-
 # Редактирование мои задачи
 def edit_my_task(request, task_id):
     task = get_object_or_404(Mytask, id=task_id)
@@ -231,7 +231,70 @@ def edit_subtask(request, subtask_id):
 
     return render(request, 'Edit/edit_subtask.html', {'subtask_form': subtask_form,})
 
+# Удалить проект
+def delete_project(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
 
+    if request.user == project.creator:
+        if request.method == 'POST':
+            project.delete()
+            messages.success(request, f'Проект {project.name} успешно удален.')
+            return redirect(reverse('my_project'))
+        return render(request, 'delete/delete_project.html', {'project': project})
+    else:
+       return HttpResponseForbidden("У вас нет прав на удаление этого проекта.")
+    
+# Удалить задачу
+def delete_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+
+    if request.user == task.project.creator:
+        if request.method == 'POST':
+            task.delete()
+            messages.success(request, f'Проект {task.name_task} успешно удален.')
+            return redirect(reverse('my_project'))
+        return render(request, 'delete/delete_task.html', {'task': task})
+    else:
+       return HttpResponseForbidden("У вас нет прав на удаление этого проекта.")
+    
+# Удалить мою задачу
+def delete_my_task(request, task_id):
+    task = get_object_or_404(Mytask, id=task_id)
+
+    if request.user == task.creator:
+        if request.method == 'POST':
+            task.delete()
+            messages.success(request, f'Проект {task.name_task} успешно удален.')
+            return redirect(reverse('my_own_task'))
+        return render(request, 'delete/delete_my_task.html', {'task': task})
+    else:
+       return HttpResponseForbidden("У вас нет прав на удаление этого проекта.")
+
+# Удалить мою подзадачу для моей задыч
+def delete_my_subtask(request, subtask_id):
+    subtask = get_object_or_404(Mysubtask, id=subtask_id)
+
+    if request.user == subtask.task.creator:
+        if request.method == 'POST':
+            subtask.delete()
+            messages.success(request, f'Проект {subtask.name_subtask} успешно удален.')
+            return redirect(reverse('my_own_task'))
+        return render(request, 'delete/delete_my_subtask.html', {'subtask': subtask})
+    else:
+       return HttpResponseForbidden("У вас нет прав на удаление этого проекта.")
+    
+# Удалить мою подзадачу
+def delete_subtask(request, subtask_id):
+    subtask = get_object_or_404(Subtask, id=subtask_id)
+
+    if request.user == subtask.creator:
+        if request.method == 'POST':
+            subtask.delete()
+            messages.success(request, f'Проект {subtask.name_sub} успешно удален.')
+            return redirect(reverse('tasksIDo'))
+        return render(request, 'delete/delete_subtask.html', {'subtask': subtask})
+    else:
+       return HttpResponseForbidden("У вас нет прав на удаление этого проекта.")
 
 
 

@@ -18,14 +18,21 @@ urlpatterns = [
     path('NewMySubtask/<int:task_id>/', views.new_my_subtask, name = 'new_my_subtask'),
     path('MyProject', views.my_project, name = 'my_project'),
 
-
+    # Для редактирования 
     path('EditProject/<int:project_id>/', views.edit_project, name = 'edit_project'),
     path('EditTask/<int:task_id>/', views.edit_task, name = 'edit_task'),
     path('EditMyTask/<int:task_id>/', views.edit_my_task, name = 'edit_my_task'),
     path('EditMySubtask/<int:subtask_id>/', views.edit_mysubtask, name = 'edit_mysubtask'),
     path('EditSubtask/<int:subtask_id>/', views.edit_subtask, name = 'edit_subtask'),
 
+    # Для удаления
+    path('DeleteProject/<int:project_id>/', views.delete_project, name = 'delete_project'),
+    path('Deletetask/<int:task_id>/', views.delete_task, name = 'delete_task'),
+    path('DeleteMytask/<int:task_id>/', views.delete_my_task, name = 'delete_my_task'),
+    path('DeleteMySubtask/<int:subtask_id>/', views.delete_my_subtask, name = 'delete_my_subtask'),
+    path('DeleteSubtask/<int:subtask_id>/', views.delete_subtask, name = 'delete_subtask'),
 
+    
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('accounts/', include('django.contrib.auth.urls')),
 
