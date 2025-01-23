@@ -104,8 +104,8 @@ class Comment_form(forms.ModelForm):
         #widgets = {}
 
 # Форма для отправки файлов
-class Comment_form(forms.ModelForm):
+class Send_file_form(forms.ModelForm):
     class Meta:
         model = FileTask
-        fields = ['comment_text']
+        fields = ['file']
         #widgets = {}

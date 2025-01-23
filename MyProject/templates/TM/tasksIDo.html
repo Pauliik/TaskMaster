@@ -36,9 +36,8 @@
                         {% endfor %}
                         <a href = "{% url 'new_subtask' task.id %}">Создать новую подзадачу</a>
                     </ol>
-                </ul>
-                
-                
+                </ul>  
+                <a href = "{% url 'send_file' task.id %}">Отправить файл</a>              
             </div>         
         {% endfor %}  
     {% else %}

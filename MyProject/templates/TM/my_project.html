@@ -14,22 +14,25 @@
                     </li>
                     <a href = "{% url 'edit_project' project.id %}">Редактировать проект</a>
                     <a href = "{% url 'delete_project' project.id %}">Удалить проект</a>
-                {% for task in project.tasks.all %}
-                    <ul>
-                        <li><h4>Название задачи {{ task.name_task }}</h4></li>
-                    </ul>
-                    <ul>
-                        <ol>
-                            <li><h4>Опмсание задачи {{ task.description }}</h4></li>
-                            <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
-                            <li><h4>Статус {{ task.get_status_display }}</h4></li>
-                            <li><h4>исполнитель {{ task.executor }}</h4></li>
-                            <li><h4>Срок выполнения {{ task.due_date }}</h4></li>           
-                        </ol>
-                        <a href = "{% url 'edit_task' task.id %}">Редактировать задачу</a>
-                        <a href = "{% url 'delete_task' task.id %}">Удалить задачу</a>
-                    </ul>
-                {% endfor %}
+                    {% for task in project.tasks.all %}
+                        <ul>
+                            <li><h4>Название задачи {{ task.name_task }}</h4></li>
+                        </ul>
+                        {% for file in task.fileTasks.all %}
+                            <a href="{{ file.file.url }}" download="{{ file.file.name }}">{{ file.file }}</a> (Задача: {{ file.task.name_task }})
+                        {% endfor %}
+                        <ul>
+                            <ol>
+                                <li><h4>Опмсание задачи {{ task.description }}</h4></li>
+                                <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
+                                <li><h4>Статус {{ task.get_status_display }}</h4></li>
+                                <li><h4>исполнитель {{ task.executor }}</h4></li>
+                                <li><h4>Срок выполнения {{ task.due_date }}</h4></li>           
+                            </ol>
+                            <a href = "{% url 'edit_task' task.id %}">Редактировать задачу</a>
+                            <a href = "{% url 'delete_task' task.id %}">Удалить задачу</a>
+                        </ul>
+                    {% endfor %}
                 </ul>
             </div> 
         {% endfor %}  

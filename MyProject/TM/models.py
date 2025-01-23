@@ -79,7 +79,7 @@ class TaskComment(models.Model):
     
 class FileTask(models.Model):
     task = models.ForeignKey(Task, on_delete = models.CASCADE, related_name = 'fileTasks', verbose_name = 'Задача')
-    file = models.FileField(upload_to = 'task_attachments/', verbose_name = 'Файл')
+    file = models.FileField(upload_to = 'work_file/', verbose_name = 'Файл')
     sender = models.ForeignKey(User, on_delete = models.SET_NULL, null = True, blank = True, related_name = 'sender_fileTasks', verbose_name = 'Отправитель')
     date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Дата создания')
 

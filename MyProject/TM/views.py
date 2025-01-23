@@ -98,12 +98,35 @@ def my_project(request):
     if request.user.is_authenticated:
         myproject= Project.objects.filter(creator = request.user)
         return render(request, 'TM/my_project.html', {'myproject': myproject})
+    
 
 # Задачи которые я делаю
-def tasksIDo(request):
+def tasksIDo(request):        
     if request.user.is_authenticated:
         my_task = Task.objects.filter(executor = request.user)
-        return render(request, 'TM/tasksIDo.html', {'my_task': my_task})
+    return render(request, 'TM/tasksIDo.html', {'my_task': my_task})
+        
+
+def send_file(request, task_id):
+    if request.user.is_authenticated:
+        task = get_object_or_404(Task, pk=task_id)  
+        if request.method == "POST":
+            form = Send_file_form(request.POST, request.FILES)
+            if form.is_valid():          
+                Myfile = request.FILES['file']
+                
+                #Создаем экземпляр
+                file_task = FileTask(
+                task = task,
+                file=Myfile,
+                sender = request.user
+                )
+                file_task.save()
+
+                return redirect(reverse('tasksIDo'))
+        else:
+            form = Send_file_form()
+        return render(request, "TM/send_file.html", {"form": form})  # Передаем задачу в шаблон
 
 # Создание новой подзадачи
 def new_subtask(request, task_id):
@@ -124,14 +147,12 @@ def new_subtask(request, task_id):
 
     return render(request, 'TM/new_subtask.html', {'form': form})
     
-
 # мои собственные задачи
 def my_own_task(request):
     if request.user.is_authenticated:
         my_task = Mytask.objects.filter(creator = request.user)
         return render(request, 'TM/my_own_task.html', {'my_task': my_task})
     
-
 # Создаем собственную задачу
 def new_my_task(request):
     if request.method == 'POST':

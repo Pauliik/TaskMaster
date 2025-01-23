@@ -1,0 +1,22 @@
+{% extends 'TM/base.html' %}
+
+{% block title %}Document main{% endblock %}
+
+{% block content %}
+    <form method = 'post' enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>
+            <div>
+                <label for = '{{ form.file.id_for_label }}'>{{ form.file.label }}</label>
+                {{ form.file }}
+                {% if form.file.errors %}
+                    <div>
+                        {{ form.file.errors.as_text }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <button type = 'submit'>Отправить</button>
+    </form>
+{% endblock %}
+
