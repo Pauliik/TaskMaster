@@ -3,7 +3,12 @@
 {% block title %}Document main{% endblock %}
 
 {% block content %}
-    {% if my_task %}                
+    <form method="get">
+        <p><input type = 'text' name = 'q' placeholder = 'Поик задачи...' value="{{ query }}"></p>
+        <p><button type="submit">Найти</button></p>
+    </form>
+
+    {% if my_task %}           
         {% for task in my_task %} 
             <div>
                 <ul>
@@ -41,6 +46,6 @@
             </div>         
         {% endfor %}  
     {% else %}
-        <p>У вас нет назначанных задач!!!</p>
+        <p>У вас нет назначанных задач!!! или поиск ничего не выдал</p>
     {% endif %}
 {% endblock %}

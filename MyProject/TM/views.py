@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.views import PasswordResetView
 from django.http import HttpResponseForbidden
+from django.db.models import Q
 
 from .models import *
 from .forms import *
@@ -83,35 +84,49 @@ def new_project(request):
 
 # Создания новой задачи для проекта
 def new_task(request):
-    if request.method == 'POST':
-        form = New_task_forms(request.POST)
-        if form.is_valid():
-            task = form.save()
-            messages.success(request, f'Задача {task} успешна сохранена')
-            return render(request, 'TM/new_task.html', {'form': form})
-    form = New_task_forms()
-
-    return render(request, 'TM/new_task.html', {'form': form})
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = New_task_forms(request.POST)
+            if form.is_valid():
+                task = form.save()
+                messages.success(request, f'Задача {task} успешна сохранена')
+                return render(request, 'TM/new_task.html', {'form': form})
+        form = New_task_forms()
+        return render(request, 'TM/new_task.html', {'form': form})
 
 # Проекты
 def my_project(request):
     if request.user.is_authenticated:
         myproject= Project.objects.filter(creator = request.user)
+        query = request.GET.get('q')
+        if query:
+            myproject = Project.objects.filter(creator = request.user).filter(Q(name__icontains = query))
+        else:
+            myproject= Project.objects.filter(creator = request.user)
         return render(request, 'TM/my_project.html', {'myproject': myproject})
 
 # Задания к проектам
 def my_project_task(request, project_name):
-    project = get_object_or_404(Project, name = project_name)
-    tasks = Task.objects.filter(project = project)
-    return render(request, 'TM/my_project_task.html', {'tasks': tasks, })
-    
+    if request.user.is_authenticated:
+        project = get_object_or_404(Project, name = project_name)
+        tasks = Task.objects.filter(project = project)
+        query = request.GET.get('q')
+        if query:
+            tasks = Task.objects.filter(project = project).filter(Q(name_task__icontains = query))
+        else:
+            tasks = Task.objects.filter(project = project)
+        return render(request, 'TM/my_project_task.html', {'tasks': tasks, })
 
 # Задачи которые я делаю
-def tasksIDo(request):        
+def tasksIDo(request):    
     if request.user.is_authenticated:
         my_task = Task.objects.filter(executor = request.user)
+        query = request.GET.get('q')
+        if query:
+            my_task = Task.objects.filter(executor = request.user).filter(Q(name_task__icontains = query))
+        else:
+            my_task = Task.objects.filter(executor = request.user)
     return render(request, 'TM/tasksIDo.html', {'my_task': my_task})
-        
 
 def send_file(request, task_id):
     if request.user.is_authenticated:
@@ -157,6 +172,11 @@ def new_subtask(request, task_id):
 def my_own_task(request):
     if request.user.is_authenticated:
         my_task = Mytask.objects.filter(creator = request.user)
+        query = request.GET.get('q')
+        if query:
+            my_task = Mytask.objects.filter(creator = request.user).filter(Q(name_task__icontains = query))
+        else:
+            my_task = Mytask.objects.filter(creator = request.user)
         return render(request, 'TM/my_own_task.html', {'my_task': my_task})
     
 # Создаем собственную задачу

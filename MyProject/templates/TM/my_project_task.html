@@ -3,6 +3,11 @@
 {% block title %}Document main{% endblock %}
 
 {% block content %}
+    <form method="get">
+        <p><input type = 'text' name = 'q' placeholder = 'Поик задачи...' value="{{ query }}"></p>
+        <p><button type="submit">Найти</button></p>
+    </form>
+    
     {% if tasks %}                    
         {% for task in tasks %}  
             <div>
