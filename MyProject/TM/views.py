@@ -93,11 +93,17 @@ def new_task(request):
 
     return render(request, 'TM/new_task.html', {'form': form})
 
-# Мои проекты
+# Проекты
 def my_project(request):
     if request.user.is_authenticated:
         myproject= Project.objects.filter(creator = request.user)
         return render(request, 'TM/my_project.html', {'myproject': myproject})
+
+# Задания к проектам
+def my_project_task(request, project_name):
+    project = get_object_or_404(Project, name = project_name)
+    tasks = Task.objects.filter(project = project)
+    return render(request, 'TM/my_project_task.html', {'tasks': tasks, })
     
 
 # Задачи которые я делаю

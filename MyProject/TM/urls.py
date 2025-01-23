@@ -19,6 +19,7 @@ urlpatterns = [
     path('MyProject', views.my_project, name = 'my_project'),
     path('Comment/<str:project_name>/', views.comment_project, name = 'comment'),
     path('SendFile/<int:task_id>/', views.send_file, name = 'send_file'),
+    path('ProjectTask/<str:project_name>/', views.my_project_task, name = 'my_project_task'),
 
     # Для редактирования 
     path('EditProject/<int:project_id>/', views.edit_project, name = 'edit_project'),

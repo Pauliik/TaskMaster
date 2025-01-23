@@ -1,0 +1,30 @@
+{% extends 'TM/base.html' %}
+
+{% block title %}Document main{% endblock %}
+
+{% block content %}
+    {% if tasks %}                    
+        {% for task in tasks %}  
+            <div>
+                <ul>
+                    <li><h4>Название задачи {{ task.name_task }}</h4></li>
+                    <ol>
+                        <li><h4>Опмсание задачи {{ task.description }}</h4></li>
+                        <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
+                        <li><h4>Статус {{ task.get_status_display }}</h4></li>
+                        <li><h4>исполнитель {{ task.executor }}</h4></li>
+                        <li><h4>Срок выполнения {{ task.due_date }}</h4></li> 
+                        {% for file in task.fileTasks.all %}
+                            <a href="{{ file.file.url }}" download="{{ file.file.name }}">{{ file.file }}</a> (Задача: {{ file.task.name_task }})
+                        {% endfor %}          
+                    </ol>
+                    <a href = "{% url 'edit_task' task.id %}">Редактировать задачу</a>
+                    <a href = "{% url 'delete_task' task.id %}">Удалить задачу</a>
+                </ul>
+            </div> 
+        {% endfor %}  
+    {% else %}
+        <p>Пока заданий к данному проекту нет</p>
+    {% endif %}
+
+{% endblock %}
