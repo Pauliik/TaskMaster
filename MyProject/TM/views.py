@@ -219,13 +219,14 @@ def edit_project(request, project_id):
 # Редактирование задачи
 def edit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
-    
+    project_name = request.GET.get('project_name')
+
     if request.method == 'POST':
         task_form = Edit_task_form(request.POST, instance=task) # instance=project Подставляет данные
         if task_form.is_valid():
             task_form.save()
             messages.success(request, f'Проект {task.name_task} успешно обновлен')
-            return redirect(reverse('my_project'))
+            return redirect(reverse('my_project_task', kwargs={'project_name': project_name}))
         else:
             messages.error(request, 'Произошла ошибка при обновлении проекта!')
     else:

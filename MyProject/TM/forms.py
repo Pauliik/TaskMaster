@@ -103,6 +103,8 @@ class Comment_form(forms.ModelForm):
         fields = ['comment_text']
         #widgets = {}
 
+
+import os
 # Форма для отправки файлов
 class Send_file_form(forms.ModelForm):
     class Meta:

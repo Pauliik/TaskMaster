@@ -15,10 +15,11 @@
                         <li><h4>исполнитель {{ task.executor }}</h4></li>
                         <li><h4>Срок выполнения {{ task.due_date }}</h4></li> 
                         {% for file in task.fileTasks.all %}
-                            <a href="{{ file.file.url }}" download="{{ file.file.name }}">{{ file.file }}</a> (Задача: {{ file.task.name_task }})
+                            <a href="{{ file.file.url }}" download="{{ file.filename  }}">{{ file.filename  }}</a> 
                         {% endfor %}          
                     </ol>
-                    <a href = "{% url 'edit_task' task.id %}">Редактировать задачу</a>
+                    <a href = "{% url 'edit_task' task.id %}?project_name={{ task.project.name }}">Редактировать задачу</a>
+                    
                     <a href = "{% url 'delete_task' task.id %}">Удалить задачу</a>
                 </ul>
             </div> 
