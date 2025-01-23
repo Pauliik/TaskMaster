@@ -95,3 +95,17 @@ class Edit_subtask_form(forms.ModelForm):
         model = Subtask
         fields = ['name_sub', 'description', 'status']
         #widgets = {}
+
+# Форма для редактирование моих подзадачь
+class Comment_form(forms.ModelForm):
+    class Meta:
+        model = TaskComment
+        fields = ['comment_text']
+        #widgets = {}
+
+# Форма для отправки файлов
+class Comment_form(forms.ModelForm):
+    class Meta:
+        model = FileTask
+        fields = ['comment_text']
+        #widgets = {}

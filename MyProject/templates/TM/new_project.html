@@ -7,14 +7,6 @@
         {% csrf_token %}
         <div>
             <div>
-                {% if form.errors %}
-                    {% for error in form.non_field_errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                {% endif %}
-            </div>
-
-            <div>
                 <div>
                     <label for = '{{ project_form.name.id_for_label }}'>{{ project_form.name.label }}</label>
                     {{ project_form.name }}

@@ -18,8 +18,8 @@ class SubAdmin(admin.ModelAdmin):
 
 @admin.register(TaskComment)
 class TaskComentAdmin(admin.ModelAdmin):
-    list_display = ('task', 'author_comment', 'comment_text', 'date_creation')
-    search_fields = ('task', 'creator')
+    list_display = ('project', 'author_comment', 'comment_text', 'date_creation')
+    search_fields = ('project', 'creator')
 
 @admin.register(FileTask)
 class FileTaskAdmin(admin.ModelAdmin):

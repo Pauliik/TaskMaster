@@ -64,8 +64,8 @@ class Subtask(models.Model):
         return self.name_sub
     
 class TaskComment(models.Model):
-    task = models.ForeignKey(Task, on_delete = models.CASCADE, related_name = 'comments', verbose_name = 'Задфчв')
-    #project = models.ForeignKey(Project, on_delete = models.CASCADE, related_name = 'comments', verbose_name = 'Проект') ??????
+    #task = models.ForeignKey(Task, on_delete = models.CASCADE, related_name = 'comments', verbose_name = 'Задфчв')
+    project = models.ForeignKey(Project, on_delete = models.CASCADE, related_name = 'comments', verbose_name = 'Проект') #??????
     author_comment = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name = 'Автор комментария')
     comment_text = models.TextField(verbose_name = 'Текст коментария')
     date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Дата создания')

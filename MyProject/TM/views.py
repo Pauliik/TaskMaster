@@ -11,10 +11,36 @@ from .forms import *
 # Функция для главной страницы 
 def main_page(request):
     if request.user.is_authenticated:
-        my_task = Task.objects.filter(executor = request.user)
-        return render(request, 'TM/main_page.html', {'my_task': my_task})
+        if request.user.is_staff:
+            projects = Project.objects.filter(creator = request.user)
+            print(f"staff = {projects}")
+            return render(request, 'TM/main_page.html', {'projects': projects})
+            
+        else:
+            task = Task.objects.filter(executor = request.user)
+            projects = Project.objects.filter(tasks__in = task).distinct()
+            print(f"not staff = {projects}") # Добавьте эту строку
+            return render(request, 'TM/main_page.html', {'projects': projects})
     else:
-        return render(request, 'TM/main_page.html')
+        return render(request, 'TM/introductoryPage.html')
+    
+# Сообщения
+def comment_project(request, project_name):
+    project = get_object_or_404(Project, name = project_name)
+    comments = TaskComment.objects.filter(project = project)
+
+    if request.method == 'POST':
+        form = Comment_form(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            if request.user.is_authenticated:
+                comment.project = project
+                comment.author_comment = request.user
+                comment.save()
+            return redirect(reverse('comment', kwargs={'project_name': project.name}))
+    else:
+        form = Comment_form()      
+    return render(request, 'TM/comment.html', {'form': form, 'comments': comments})
 
 def introductoryPage(request):
     return render(request, 'TM/introductoryPage.html')
@@ -295,8 +321,6 @@ def delete_subtask(request, subtask_id):
         return render(request, 'delete/delete_subtask.html', {'subtask': subtask})
     else:
        return HttpResponseForbidden("У вас нет прав на удаление этого проекта.")
-
-
 
 
 
