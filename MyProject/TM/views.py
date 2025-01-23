@@ -122,20 +122,14 @@ def tasksIDo(request):
     if request.user.is_authenticated:
         my_task = Task.objects.filter(executor = request.user)
         query = request.GET.get('q')
-        if query:
-            my_task = Task.objects.filter(executor = request.user).filter(Q(name_task__icontains = query))
-        else:
-            my_task = Task.objects.filter(executor = request.user)
-    return render(request, 'TM/tasksIDo.html', {'my_task': my_task})
 
-def send_file(request, task_id):
-    if request.user.is_authenticated:
-        task = get_object_or_404(Task, pk=task_id)  
-        if request.method == "POST":
+        if request.method == 'POST':
             form = Send_file_form(request.POST, request.FILES)
+            task_id = request.POST.get('task_id') # Получаем ID задачи из POST запроса
+            task = get_object_or_404(Task, id = task_id)
             if form.is_valid():          
                 Myfile = request.FILES['file']
-                
+
                 #Создаем экземпляр
                 file_task = FileTask(
                 task = task,
@@ -144,10 +138,14 @@ def send_file(request, task_id):
                 )
                 file_task.save()
 
+                messages.success(request, 'Файл успешно сохранено')
                 return redirect(reverse('tasksIDo'))
+        if query:
+            my_task = Task.objects.filter(executor = request.user).filter(Q(name_task__icontains = query))
         else:
-            form = Send_file_form()
-        return render(request, "TM/send_file.html", {"form": form})  # Передаем задачу в шаблон
+            my_task = Task.objects.filter(executor = request.user)
+    form = Send_file_form()
+    return render(request, 'TM/tasksIDo.html', {'my_task': my_task, 'form': form})
 
 # Создание новой подзадачи
 def new_subtask(request, task_id):
@@ -217,7 +215,6 @@ def new_my_subtask(request, task_id):
 # Настройки
 def settings(request):
     return render(request, 'TM/settings.html')
-
 
 # Редактирование проекта
 def edit_project(request, project_id):
@@ -321,13 +318,13 @@ def delete_project(request, project_id):
 # Удалить задачу
 def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
-
+    project_name = request.GET.get('project_name')
     if request.user == task.project.creator:
         if request.method == 'POST':
             task.delete()
             messages.success(request, f'Проект {task.name_task} успешно удален.')
-            return redirect(reverse('my_project'))
-        return render(request, 'delete/delete_task.html', {'task': task})
+            return redirect(reverse('my_project_task', kwargs={'project_name': project_name}))
+        return render(request, 'delete/delete_task.html', {'task': task, 'project_name': project_name})
     else:
        return HttpResponseForbidden("У вас нет прав на удаление этого проекта.")
     

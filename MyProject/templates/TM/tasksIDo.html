@@ -8,6 +8,14 @@
         <p><button type="submit">Найти</button></p>
     </form>
 
+    {% if messages %}
+        <ul class = 'messages'>
+            {% for message in messages %}
+                <li {% if message.tags %} class = '{{ message.tags }}' {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     {% if my_task %}           
         {% for task in my_task %} 
             <div>
@@ -42,7 +50,24 @@
                         <a href = "{% url 'new_subtask' task.id %}">Создать новую подзадачу</a>
                     </ol>
                 </ul>  
-                <a href = "{% url 'send_file' task.id %}">Отправить файл</a>              
+                <div>
+                    <form method = 'post' enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="task_id" value="{{ task.id }}">  <!-- Скрытое поле с ID задачи -->
+                        <div>
+                            <div>
+                                <label for = '{{ form.file.id_for_label }}'>{{ form.file.label }}</label>
+                                {{ form.file }}
+                                {% if form.file.errors %}
+                                    <div>
+                                        {{ form.file.errors.as_text }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <button type = 'submit'>Отправить</button>
+                    </form>
+                </div>                  
             </div>         
         {% endfor %}  
     {% else %}

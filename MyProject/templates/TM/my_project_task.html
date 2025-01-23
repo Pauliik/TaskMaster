@@ -25,7 +25,7 @@
                     </ol>
                     <a href = "{% url 'edit_task' task.id %}?project_name={{ task.project.name }}">Редактировать задачу</a>
                     
-                    <a href = "{% url 'delete_task' task.id %}">Удалить задачу</a>
+                    <a href = "{% url 'delete_task' task.id %}?project_name={{ task.project.name }}">Удалить задачу</a>
                 </ul>
             </div> 
         {% endfor %}  
