@@ -3,53 +3,58 @@
 {% block title %}Document main{% endblock %}
 
 {% block content %}
-    <form method="get">
-        {% csrf_token %}
-        <div>
+    {% if request.user.is_staff %}
+        <form method="get">
+            {% csrf_token %}
             <div>
-                <label for="{{ filter.form.name.id_for_label }}">{{ filter.form.name.label }}</label>
-                {{ filter.form.name }}
-                {% if filter.form.name.errors %}
-                    <div>
-                        {{ filter.form.name.errors|join:", " }}
-                    </div>
-                {% endif %}
-            </div>
-
-            <div>
-                <label for="{{ filter.form.end_date.id_for_label }}">{{ filter.form.end_date.label }}</label>
-                {{ filter.form.end_date }}
-                {% if filter.form.end_date.errors %}
-                    <div>
-                        {{ filter.form.end_date.errors|join:", " }}
-                    </div>
-                {% endif %}
-            </div>
-            <p><button type="submit">Найти</button></p>
-            <p><a href="{% url 'my_project' %}"><button type="button">Сбросить</button></a></p>
-        </div>
-    </form>
-    
-    {% if check == True %}
-        {% if myproject %}                    
-            {% for project in myproject %}  
                 <div>
-                    <ul>
-                        <li>
-                            <a href = "{% url 'my_project_task' project.name %}"> Название проекта {{ project.name }} </a>                        
-                            <h3>описание проекта {{ project.description }} </h3>
-                            <h3>Дата сдачи проекта {{ project.end_date }} </h3>
-                        </li>
-                        <a href = "{% url 'edit_project' project.id %}">Редактировать проект</a>
-                        <a href = "{% url 'delete_project' project.id %}">Удалить проект</a>
-                    </ul>
-                    <a href = "{% url 'new_task' project.name %}">Добавить новую задачу</a>
-                </div> 
-            {% endfor %}  
+                    <label for="{{ filter.form.name.id_for_label }}">{{ filter.form.name.label }}</label>
+                    {{ filter.form.name }}
+                    {% if filter.form.name.errors %}
+                        <div>
+                            {{ filter.form.name.errors|join:", " }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ filter.form.end_date.id_for_label }}">{{ filter.form.end_date.label }}</label>
+                    {{ filter.form.end_date }}
+                    {% if filter.form.end_date.errors %}
+                        <div>
+                            {{ filter.form.end_date.errors|join:", " }}
+                        </div>
+                    {% endif %}
+                </div>
+                <p><button type="submit">Найти</button></p>
+                <p><a href="{% url 'my_project' %}"><button type="button">Сбросить</button></a></p>
+            </div>
+        </form>
+        
+        {% if check == True %}
+            {% if myproject %}                    
+                {% for project in myproject %}  
+                    <div>
+                        <ul>
+                            <li>
+                                <a href = "{% url 'my_project_task' project.name %}"> Название проекта {{ project.name }} </a>                        
+                                <h3>описание проекта {{ project.description }} </h3>
+                                <h3>Дата сдачи проекта {{ project.end_date }} </h3>
+                            </li>
+                            <a href = "{% url 'edit_project' project.id %}">Редактировать проект</a>
+                            <a href = "{% url 'delete_project' project.id %}">Удалить проект</a>
+                        </ul>
+                        <a href = "{% url 'new_task' project.name %}">Добавить новую задачу</a>
+                    </div> 
+                {% endfor %}  
+            {% else %}
+                <p>поиск ничего не выдал</p>
+            {% endif %}
         {% else %}
-            <p>поиск ничего не выдал</p>
+            <p>У вас нет назначанных задач!!!</p>
         {% endif %}
     {% else %}
-        <p>У вас нет назначанных задач!!!</p>
+        <p>У вас нет доступа на эту страницу</p>
+        <a href = "{% url 'main_page' %}">Перейти на главную страницу</a>
     {% endif %}
 {% endblock %}

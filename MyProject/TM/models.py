@@ -1,12 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 from pathlib import Path  
+from uuid import uuid4
 
 class Project(models.Model):
     name = models.CharField(max_length = 255, unique = True, verbose_name = 'Название проекта')
     description = models.TextField(verbose_name = 'Описание проекта')
     end_date = models.DateField(verbose_name = 'Дфта окончания')
     creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'created_projects', verbose_name = 'Создатель')
+    key = models.CharField(max_length=64, unique=True, default=uuid4)
     date_creation = models.DateTimeField(auto_now_add=True, verbose_name = 'Дата создания')
 
     class Meta:
