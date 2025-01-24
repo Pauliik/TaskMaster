@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from . import views, api
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 urlpatterns = [
     path('', views.introductoryPage, name='introductoryPage'),
     path('register/', views.register_user, name='register'),
-    path('main/', views.main_page, name='main_page'),
+    re_path(r'main(?:/(?P<project_name>[^/]+))?/$', views.main_page, name='main_page'),
     path('settings', views.settings, name = 'settings'),
     path('NewTask/<str:project_name>/', views.new_task, name = 'new_task'),
     path('NewProject', views.new_project, name = 'new_project'),
@@ -17,7 +17,6 @@ urlpatterns = [
     path('NewMyTask', views.new_my_task, name = 'new_my_task'),
     path('NewMySubtask/<int:task_id>/', views.new_my_subtask, name = 'new_my_subtask'),
     path('MyProject', views.my_project, name = 'my_project'),
-    path('Comment/<str:project_name>/', views.comment_project, name = 'comment'),
     path('ProjectTasks/<str:project_name>/', views.my_project_task, name = 'my_project_task'),
 
     # Для редактирования 
