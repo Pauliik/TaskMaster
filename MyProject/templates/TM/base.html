@@ -18,9 +18,6 @@
                     </li>
                     {% if request.user.is_staff %}
                         <li>
-                            <a href = "{% url 'new_task' %}">Создать новую задачу к проекту</a>
-                        </li>
-                        <li>
                             <a href = "{% url 'new_project' %}">Создать новый проект</a>
                         </li>  
                         <li>

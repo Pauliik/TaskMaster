@@ -4,8 +4,50 @@
 
 {% block content %}
     <form method="get">
-        <p><input type = 'text' name = 'q' placeholder = 'Поик задачи...' value="{{ query }}"></p>
-        <p><button type="submit">Найти</button></p>
+        {% csrf_token %}
+        <div>
+            <div>
+                <label for="{{ filter.form.name_task.id_for_label }}">{{ filter.form.name_task.label }}</label>
+                {{ filter.form.name_task }}
+                {% if filter.form.name_task.errors %}
+                    <div>
+                        {{ filter.form.name_task.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ filter.form.priority.id_for_label }}">{{ filter.form.priority.label }}</label>
+                {{ filter.form.priority }}
+                {% if filter.form.priority.errors %}
+                    <div>
+                        {{ filter.form.priority.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+                
+            <div>
+                <label for="{{ filter.form.status.id_for_label }}">{{ filter.form.status.label }}</label>
+                {{ filter.form.status }}
+                {% if filter.form.status.errors %}
+                    <div>
+                        {{ filter.form.status.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ filter.form.due_date.id_for_label }}">{{ filter.form.due_date.label }}</label>
+                {{ filter.form.due_date }}
+                {% if filter.form.due_date.errors %}
+                    <div>
+                        {{ filter.form.due_date.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+            <p><button type="submit">Найти</button></p>
+            <p><a href="{% url 'tasksIDo' %}"><button type="button">Сбросить</button></a></p>
+        </div>
     </form>
 
     {% if messages %}
@@ -16,61 +58,65 @@
         </ul>
     {% endif %}
 
-    {% if my_task %}           
-        {% for task in my_task %} 
-            <div>
-                <ul>
-                    <li>
-                        <h3>задачу относится к проекту {{ task.project }} </h3>
-                        <h3>описание проекта {{ task.project.description }} </h3>
-                    </li>
-                </ul>
-
-                <ul>
-                    <ol>
-                        <li><h4>Название задачи {{ task.name_task }}</h4></li>
-                        <li><h4>Опмсание задачи {{ task.description }}</h4></li>
-                        <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
-                        <li><h4>Статус {{ task.get_status_display }}</h4></li>
-                        <li><h4>Срок выполнения {{ task.due_date }}</h4></li>
-                        {% for subtask in task.subtask.all %}                      
-                            <ul>
-                                <li><h4>Название подзадачи {{ subtask.name_sub }}</h4></li>
-                            </ul>
-
-                            <ul>
-                                <ol>
-                                    <li><h4>Описание подзадачи {{ subtask.description }}</h4></li>
-                                    <li><h4>Статус подзадачи {{ subtask.status }}</h4></li>
-                                </ol>
-                            </ul>
-                            <a href = "{% url 'delete_subtask' subtask.id %}">Удалить подзадачу</a>
-                            <a href = "{% url 'edit_subtask' subtask.id %}">Редактировать подзадачу</a>
-                        {% endfor %}
-                        <a href = "{% url 'new_subtask' task.id %}">Создать новую подзадачу</a>
-                    </ol>
-                </ul>  
+    {% if check == True %} 
+        {% if my_task %}          
+            {% for task in my_task %} 
                 <div>
-                    <form method = 'post' enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input type="hidden" name="task_id" value="{{ task.id }}">  <!-- Скрытое поле с ID задачи -->
-                        <div>
+                    <ul>
+                        <li>
+                            <h3>задачу относится к проекту {{ task.project }} </h3>
+                            <h3>описание проекта {{ task.project.description }} </h3>
+                        </li>
+                    </ul>
+
+                    <ul>
+                        <ol>
+                            <li><h4>Название задачи {{ task.name_task }}</h4></li>
+                            <li><h4>Опмсание задачи {{ task.description }}</h4></li>
+                            <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
+                            <li><h4>Статус {{ task.get_status_display }}</h4></li>
+                            <li><h4>Срок выполнения {{ task.due_date }}</h4></li>
+                            {% for subtask in task.subtask.all %}                      
+                                <ul>
+                                    <li><h4>Название подзадачи {{ subtask.name_sub }}</h4></li>
+                                </ul>
+
+                                <ul>
+                                    <ol>
+                                        <li><h4>Описание подзадачи {{ subtask.description }}</h4></li>
+                                        <li><h4>Статус подзадачи {{ subtask.status }}</h4></li>
+                                    </ol>
+                                </ul>
+                                <a href = "{% url 'delete_subtask' subtask.id %}">Удалить подзадачу</a>
+                                <a href = "{% url 'edit_subtask' subtask.id %}">Редактировать подзадачу</a>
+                            {% endfor %}
+                            <a href = "{% url 'new_subtask' task.id %}">Создать новую подзадачу</a>
+                        </ol>
+                    </ul>  
+                    <div>
+                        <form method = 'post' enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="hidden" name="task_id" value="{{ task.id }}">  <!-- Скрытое поле с ID задачи -->
                             <div>
-                                <label for = '{{ form.file.id_for_label }}'>{{ form.file.label }}</label>
-                                {{ form.file }}
-                                {% if form.file.errors %}
-                                    <div>
-                                        {{ form.file.errors.as_text }}
-                                    </div>
-                                {% endif %}
+                                <div>
+                                    <label for = '{{ form.file.id_for_label }}'>{{ form.file.label }}</label>
+                                    {{ form.file }}
+                                    {% if form.file.errors %}
+                                        <div>
+                                            {{ form.file.errors.as_text }}
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
-                        </div>
-                        <button type = 'submit'>Отправить</button>
-                    </form>
-                </div>                  
-            </div>         
-        {% endfor %}  
+                            <button type = 'submit'>Отправить</button>
+                        </form>
+                    </div>                  
+                </div>         
+            {% endfor %}  
+        {% else %}
+            <p> поиск ничего не выдал</p>
+        {% endif %}
     {% else %}
-        <p>У вас нет назначанных задач!!! или поиск ничего не выдал</p>
+        <p>У вас нет назначанных задач!!!</p>
     {% endif %}
 {% endblock %}

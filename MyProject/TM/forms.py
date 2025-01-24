@@ -27,7 +27,7 @@ class New_project_forms(forms.ModelForm):
             'end_date': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),  # format='%Y-%m-%d' исправляет вставку времени из БД для редактирования  
         }
 
-# используется для edit_project и new_project
+# используется для edit_task и new_project
 class New_projectTask_forms(forms.ModelForm):
     class Meta:
         model = Task
@@ -39,7 +39,7 @@ class New_projectTask_forms(forms.ModelForm):
 class New_task_forms(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['project', 'name_task', 'description', 'priority', 'status', 'executor', 'due_date']
+        fields = ['name_task', 'description', 'priority', 'status', 'executor', 'due_date']
         widgets = {
             'due_date': forms.DateInput(attrs = {'type': 'date'}),
         }

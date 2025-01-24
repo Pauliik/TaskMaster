@@ -3,45 +3,85 @@
 {% block title %}Document main{% endblock %}
 
 {% block content %}
+    
+
     <form method="get">
-        <p><input type = 'text' name = 'q' placeholder = 'Поик задачи...' value="{{ query }}"></p>
-        <p><button type="submit">Найти</button></p>
+        {% csrf_token %}
+        
+        <div>           
+            <div>
+                <label for="{{ filter.form.text_search.id_for_label }}">{{ filter.form.text_search.label }}</label>
+                {{ filter.form.text_search }}
+                {% if filter.form.text_search.errors %}
+                    <div>
+                        {{ filter.form.text_search.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+        
+        <div>           
+            <div>
+                <label for="{{ filter.form.priority.id_for_label }}">{{ filter.form.priority.label }}</label>
+                {{ filter.form.priority }}
+                {% if filter.form.priority.errors %}
+                    <div>
+                        {{ filter.form.priority.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ filter.form.due_date.id_for_label }}">{{ filter.form.due_date.label }}</label>
+                {{ filter.form.due_date }}
+                {% if filter.form.due_date.errors %}
+                    <div>
+                        {{ filter.form.due_date.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+            <p><button type="submit">Найти</button></p>
+            <p><a href="{% url 'my_own_task' %}"><button type="button">Сбросить</button></a></p>
+        </div>
     </form>
     
-    {% if my_task %}              
-        {% for task in my_task %}  
-            <div>
-                <ul>
-                    <li>
-                        <h3>Название задачи {{ task.name_task }} </h3>  
-                    </li>
-                </ul>
+    {% if check == True %}
+        {% if my_task %}              
+            {% for task in my_task %}  
+                <div>
+                    <ul>
+                        <li>
+                            <h3>Название задачи {{ task.name_task }} </h3>  
+                        </li>
+                    </ul>
 
-                <ul>
-                    <ol>
-                        <li><h4>Опмсание задачи {{ task.description }}</h4></li>
-                        <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
-                        <li><h4>Срок выполнения {{ task.due_date }}</h4></li>
-                        <a href = "{% url 'edit_my_task' task.id %}">Редактировать задачу</a>
-                        <a href = "{% url 'delete_my_task' task.id %}">Удалить задачу</a>
-                        {% for subtask in task.mysubtasks.all %}
-                            <ul>
-                                <li><h4>Название подзадачи {{ subtask.name_subtask }}</h4></li>
-                            </ul>
-                            <ul>                                   
-                                <ol>
-                                    <li><h4>Описание подзадачи {{ subtask.description }}</h4></li>
-                                    <li><h4>Статус подзадачи {{ subtask.status }}</h4></li>
-                                </ol>
-                            </ul>
-                            <a href = "{% url 'delete_my_subtask' subtask.id %}">Удалить подзадачу</a>
-                            <a href = "{% url 'edit_mysubtask' subtask.id %}">Редактировать подзадачу</a>
-                        {% endfor %}
-                        <a href = "{% url 'new_my_subtask' task.id %}">Создать новую подзадачу</a>
-                    </ol>
-                </ul>
-            </div> 
-        {% endfor %}  
+                    <ul>
+                        <ol>
+                            <li><h4>Опмсание задачи {{ task.description }}</h4></li>
+                            <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
+                            <li><h4>Срок выполнения {{ task.due_date }}</h4></li>
+                            <a href = "{% url 'edit_my_task' task.id %}">Редактировать задачу</a>
+                            <a href = "{% url 'delete_my_task' task.id %}">Удалить задачу</a>
+                            {% for subtask in task.mysubtasks.all %}
+                                <ul>
+                                    <li><h4>Название подзадачи {{ subtask.name_subtask }}</h4></li>
+                                </ul>
+                                <ul>                                   
+                                    <ol>
+                                        <li><h4>Описание подзадачи {{ subtask.description }}</h4></li>
+                                        <li><h4>Статус подзадачи {{ subtask.status }}</h4></li>
+                                    </ol>
+                                </ul>
+                                <a href = "{% url 'delete_my_subtask' subtask.id %}">Удалить подзадачу</a>
+                                <a href = "{% url 'edit_mysubtask' subtask.id %}">Редактировать подзадачу</a>
+                            {% endfor %}
+                            <a href = "{% url 'new_my_subtask' task.id %}">Создать новую подзадачу</a>
+                        </ol>
+                    </ul>
+                </div> 
+            {% endfor %} 
+        {% else %}
+            <p> поиск ничего не выдал</p>
+        {% endif %} 
     {% else %}
         <p>У вас нет назначанных задач!!!</p>
     {% endif %}

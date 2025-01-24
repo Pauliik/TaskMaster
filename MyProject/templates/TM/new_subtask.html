@@ -6,7 +6,6 @@
     <form method = 'post'>
         {% csrf_token %}
         <div>
-            <p>dfguihdfsuighsdfuioghiuserfg</p>
             <div>
                 <label for = '{{ form.name_sub.id_for_label }}'>{{ form.name_sub.label }}</label>
                 {{ form.name_sub }}
@@ -26,7 +25,6 @@
                     </div>
                 {% endif %}
             </div>
-
         </div>
         <button type = 'submit'>Сохранить</button>
     </form>

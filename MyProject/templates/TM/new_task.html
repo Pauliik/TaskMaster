@@ -7,16 +7,6 @@
         {% csrf_token %}
         <div>
             <div>
-                <label for = '{{ form.project.id_for_label }}'>{{ form.project.label }}</label>
-                {{ form.project }}
-                {% if form.project.errors %}
-                    <div>
-                        {{ form.project.errors.as_text }}
-                    </div>
-                {% endif %}
-            </div>
-
-            <div>
                 <label for = '{{ form.name_task.id_for_label }}'>{{ form.name_task.label }}</label>
                 {{ form.name_task }}
                 {% if form.name_task.errors %}

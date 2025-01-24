@@ -4,33 +4,89 @@
 
 {% block content %}
     <form method="get">
-        <p><input type = 'text' name = 'q' placeholder = 'Поик задачи...' value="{{ query }}"></p>
-        <p><button type="submit">Найти</button></p>
+        {% csrf_token %}
+        <div>
+            <div>
+                <label for="{{ filter.form.name_task.id_for_label }}">{{ filter.form.name_task.label }}</label>
+                {{ filter.form.name_task }}
+                {% if filter.form.name_task.errors %}
+                    <div>
+                        {{ filter.form.name_task.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ filter.form.priority.id_for_label }}">{{ filter.form.priority.label }}</label>
+                {{ filter.form.priority }}
+                {% if filter.form.priority.errors %}
+                    <div>
+                        {{ filter.form.priority.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+                
+            <div>
+                <label for="{{ filter.form.status.id_for_label }}">{{ filter.form.status.label }}</label>
+                {{ filter.form.status }}
+                {% if filter.form.status.errors %}
+                    <div>
+                        {{ filter.form.status.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ filter.form.executor.id_for_label }}">{{ filter.form.executor.label }}</label>
+                {{ filter.form.executor }}
+                {% if filter.form.executor.errors %}
+                    <div>
+                        {{ filter.form.executor.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="{{ filter.form.due_date.id_for_label }}">{{ filter.form.due_date.label }}</label>
+                {{ filter.form.due_date }}
+                {% if filter.form.due_date.errors %}
+                    <div>
+                        {{ filter.form.due_date.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+            <p><button type="submit">Найти</button></p>
+            <p><a href="{% url 'my_project_task' project_name=project_name %}"><button type="button">Сбросить</button></a></p>
+        </div>
     </form>
     
-    {% if tasks %}                    
-        {% for task in tasks %}  
-            <div>
-                <ul>
-                    <li><h4>Название задачи {{ task.name_task }}</h4></li>
-                    <ol>
-                        <li><h4>Опмсание задачи {{ task.description }}</h4></li>
-                        <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
-                        <li><h4>Статус {{ task.get_status_display }}</h4></li>
-                        <li><h4>исполнитель {{ task.executor }}</h4></li>
-                        <li><h4>Срок выполнения {{ task.due_date }}</h4></li> 
-                        {% for file in task.fileTasks.all %}
-                            <a href="{{ file.file.url }}" download="{{ file.filename  }}">{{ file.filename  }}</a> 
-                        {% endfor %}          
-                    </ol>
-                    <a href = "{% url 'edit_task' task.id %}?project_name={{ task.project.name }}">Редактировать задачу</a>
-                    
-                    <a href = "{% url 'delete_task' task.id %}?project_name={{ task.project.name }}">Удалить задачу</a>
-                </ul>
-            </div> 
-        {% endfor %}  
+    {% if check == True %}
+        {% if tasks %}                    
+            {% for task in tasks %}  
+                <div>
+                    <ul>
+                        <li><h4>Название задачи {{ task.name_task }}</h4></li>
+                        <ol>
+                            <li><h4>Опмсание задачи {{ task.description }}</h4></li>
+                            <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
+                            <li><h4>Статус {{ task.get_status_display }}</h4></li>
+                            <li><h4>исполнитель {{ task.executor }}</h4></li>
+                            <li><h4>Срок выполнения {{ task.due_date }}</h4></li> 
+                            {% for file in task.fileTasks.all %}
+                                <a href="{{ file.file.url }}" download="{{ file.filename  }}">{{ file.filename  }}</a> 
+                            {% endfor %}          
+                        </ol>
+                        <a href = "{% url 'edit_task' task.id %}?project_name={{ task.project.name }}">Редактировать задачу</a>
+                        
+                        <a href = "{% url 'delete_task' task.id %}?project_name={{ task.project.name }}">Удалить задачу</a>
+                    </ul>
+                </div> 
+            {% endfor %}  
+        {% else %}
+            <p>поиск ничего не выдал</p>
+        {% endif %}
     {% else %}
-        <p>Пока заданий к данному проекту нет</p>
+        <p>В этом проекте нет задач</p>
     {% endif %}
 
 {% endblock %}
