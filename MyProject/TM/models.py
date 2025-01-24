@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from pathlib import Path  
 
-
 class Project(models.Model):
     name = models.CharField(max_length = 255, unique = True, verbose_name = 'Название проекта')
     description = models.TextField(verbose_name = 'Описание проекта')

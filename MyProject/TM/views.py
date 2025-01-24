@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.contrib.auth.views import PasswordResetView
 from django.http import HttpResponseForbidden
 from django.db.models import Q
+from django.core.mail import send_mail
+from django.forms.models import model_to_dict
 
 from .models import *
 from .forms import *
@@ -15,13 +17,11 @@ def main_page(request):
     if request.user.is_authenticated:
         if request.user.is_staff:
             projects = Project.objects.filter(creator = request.user)
-            print(f"staff = {projects}")
             return render(request, 'TM/main_page.html', {'projects': projects})
             
         else:
             task = Task.objects.filter(executor = request.user)
             projects = Project.objects.filter(tasks__in = task).distinct()
-            print(f"not staff = {projects}") # Добавьте эту строку
             return render(request, 'TM/main_page.html', {'projects': projects})
     else:
         return render(request, 'TM/introductoryPage.html')
@@ -75,7 +75,13 @@ def new_project(request):
             task = task_form.save(commit=False)
             task.project = project
             task.save()
-            print('Сохранино')
+            send_mail(
+                'У вас появилась новое задание!',
+                f'Руководитель {request.user} выдал вам задание {task.name_task} котророе нужно выполнить до {task.due_date}',
+                'pasha@inbox.ru',
+                [task.executor.email],
+                fail_silently=False,
+            )
             messages.success(request, f'Проект {project} успешно сохранен')
             return redirect(reverse('new_project'))
     else:
@@ -93,6 +99,13 @@ def new_task(request, project_name):
                 task = form.save(commit=False)
                 task.project = project
                 task.save()
+                send_mail(
+                    'У вас появилась новое задание!',
+                    f'Руководитель {request.user} выдал вам задание {task.name_task} котророе нужно выполнить до {task.due_date}',
+                    'pasha@inbox.ru',
+                    [task.executor.email],
+                    fail_silently=False,
+                )
                 messages.success(request, f'Задача {task} успешна сохранена')
                 return redirect(reverse('new_task', kwargs={'project_name': project.name}))
                 
@@ -141,6 +154,14 @@ def tasksIDo(request):
                 )
                 file_task.save()
 
+                send_mail(
+                    f'Увожвемый {request.user} ',
+                    f'Рабочий {request.user} переслал вам {file_task.file} файл с выполненой задачей {task.name_task} которая находится в проекте {task.project.name}',
+                    'pasha@inbox.ru',
+                    [task.project.creator.email],
+                    fail_silently=False,
+                )
+
                 messages.success(request, 'Файл успешно сохранено')
                 return redirect(reverse('tasksIDo'))
         
@@ -185,7 +206,6 @@ def new_my_task(request):
             if request.user.is_authenticated:
                 mytask.creator = request.user
             mytask.save()
-            print('Сохранино')
             messages.success(request, f'Успешно сохранено {mytask.name_task}')
             return redirect(reverse('new_my_task'))
     else:
@@ -236,12 +256,40 @@ def edit_project(request, project_id):
 def edit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     project_name = request.GET.get('project_name')
+    initial_data = model_to_dict(task) # Создает словарь из таблицы
+    old_name, old_email = task.executor.username, task.executor.email
 
     if request.method == 'POST':
         task_form = Edit_task_form(request.POST, instance=task) # instance=project Подставляет данные
         if task_form.is_valid():
             task_form.save()
-            messages.success(request, f'Проект {task.name_task} успешно обновлен')
+            new_data = model_to_dict(task)
+            if (initial_data == new_data) == False:
+                if initial_data['executor'] == new_data['executor']:
+                    send_mail(
+                        f'Уважаемый {task.executor.username}',
+                        f'Руководитель {request.user} Отредактировал задание {task.name_task}',
+                        'pasha@inbox.ru',
+                        [task.executor.email],
+                        fail_silently=False,
+                    )
+                else:
+                    send_mail(
+                        f'Уважаемый {old_name}',
+                        f'Руководитель {request.user} передал задание {task.name_task} другому' ,
+                        'pasha@inbox.ru',
+                        [old_email],
+                        fail_silently=False,
+                    )
+
+                    send_mail(
+                        f'Уважаемый {task.executor.username}',
+                        f'Руководитель {request.user} передал вам выполнять новое задания {task.name_task} заместо {old_name}',
+                        'pasha@inbox.ru',
+                        [task.executor.email],
+                        fail_silently=False,
+                    )
+            messages.success(request, f'Проект {task.name_task} успешно обновлен') 
             return redirect(reverse('my_project_task', kwargs={'project_name': project_name}))
         else:
             messages.error(request, 'Произошла ошибка при обновлении проекта!')
@@ -321,6 +369,15 @@ def delete_task(request, task_id):
     if request.user == task.project.creator:
         if request.method == 'POST':
             task.delete()
+
+            send_mail(
+                        f'Уважаемый {task.executor.username}',
+                        f'Руководитель {request.user} удалил задание {task.name_task} из проекта {task.project.name}',
+                        'pasha@inbox.ru',
+                        [task.executor.email],
+                        fail_silently=False,
+                    )
+            
             messages.success(request, f'Проект {task.name_task} успешно удален.')
             return redirect(reverse('my_project_task', kwargs={'project_name': project_name}))
         return render(request, 'delete/delete_task.html', {'task': task, 'project_name': project_name})
