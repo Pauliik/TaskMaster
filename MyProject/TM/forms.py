@@ -36,12 +36,38 @@ class New_project_forms(forms.ModelForm):
 
 
 class New_projectTask_forms(forms.ModelForm):
-    class Meta:
+    executor = forms.CharField(label='Исполнитель', max_length=100)
+    class Meta:     
         model = Task
         fields = [ 'name_task', 'description', 'priority', 'status', 'executor', 'due_date']
         widgets = {
             'due_date': forms.DateInput(attrs = {'type': 'date'}),
         }
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        executor_name = self.cleaned_data['executor']
+        try:
+            executor_user = User.objects.get(username=executor_name)
+            instance.executor = executor_user
+        except User.DoesNotExist:
+            instance.executor = None 
+
+        if commit:
+            instance.save()
+        return instance
+    
+    def clean_executor(self):
+        executor_name = self.cleaned_data.get('executor')
+        if isinstance(executor_name, str):
+            try:
+                executor_user = User.objects.get(username=executor_name)
+                return executor_user
+            except User.DoesNotExist:
+                self.add_error('executor', 'Указанный пользователь не найден.')
+                return None
+        else:
+            return executor_name
 
     def clean_due_date(self):
         due_date = self.cleaned_data.get('due_date')
@@ -51,12 +77,38 @@ class New_projectTask_forms(forms.ModelForm):
 
 # Форма для создания дополнительных задачь к проекту 
 class New_task_forms(forms.ModelForm):
+    executor = forms.CharField(label='Исполнитель', max_length=100)
     class Meta:
         model = Task
         fields = ['name_task', 'description', 'priority', 'status', 'executor', 'due_date']
         widgets = {
             'due_date': forms.DateInput(attrs = {'type': 'date'}),
         }
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        executor_name = self.cleaned_data['executor']
+        try:
+            executor_user = User.objects.get(username=executor_name)
+            instance.executor = executor_user
+        except User.DoesNotExist:
+            instance.executor = None 
+
+        if commit:
+            instance.save()
+        return instance
+    
+    def clean_executor(self):
+        executor_name = self.cleaned_data.get('executor')
+        if isinstance(executor_name, str):
+            try:
+                executor_user = User.objects.get(username=executor_name)
+                return executor_user
+            except User.DoesNotExist:
+                self.add_error('executor', 'Указанный пользователь не найден.')
+                return None
+        else:
+            return executor_name
 
     def clean_due_date(self):
         due_date = self.cleaned_data.get('due_date')
@@ -113,12 +165,48 @@ class Edit_project_forms(forms.ModelForm):
 
 # Форма для редактирования задачи
 class Edit_task_form(forms.ModelForm):
+    executor = forms.CharField(label='Исполнитель', max_length=100)
     class Meta:
         model = Task
         fields = [ 'name_task', 'description', 'priority', 'status', 'executor', 'due_date']
         widgets = {
             'due_date': forms.DateInput(attrs = {'type': 'date'}, format='%Y-%m-%d'),
+
         }
+
+    def __init__(self, *args, **kwargs):
+        # Извлечение экземпляра, если он передан
+        task_instance = kwargs.get('instance', None)
+        super().__init__(*args, **kwargs)
+
+        if task_instance and task_instance.executor:
+            print(f'{task_instance.executor.username}')
+            self.fields['executor'].initial = task_instance.executor.username
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        executor_name = self.cleaned_data['executor']
+        try:
+            executor_user = User.objects.get(username=executor_name)
+            instance.executor = executor_user
+        except User.DoesNotExist:
+            instance.executor = None 
+
+        if commit:
+            instance.save()
+        return instance
+    
+    def clean_executor(self):
+        executor_name = self.cleaned_data.get('executor')
+        if isinstance(executor_name, str):
+            try:
+                executor_user = User.objects.get(username=executor_name)
+                return executor_user
+            except User.DoesNotExist:
+                self.add_error('executor', 'Указанный пользователь не найден.')
+                return None
+        else:
+            return executor_name
 
     def clean_due_date(self):
         due_date = self.cleaned_data.get('due_date')
