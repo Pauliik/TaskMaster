@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.timezone import now
+from django.db.models import Max
 
 from .models import *
 
@@ -18,7 +19,7 @@ class UserRegistrationForm(UserCreationForm):
             raise ValidationError('Пользователь с таким адресом электронной почты уже существует.')
         return email
 
-# используется для edit_project и new_project
+# используется для new_project
 class New_project_forms(forms.ModelForm):
     class Meta:
         model = Project
@@ -90,6 +91,26 @@ class New_my_subtask_forms(forms.ModelForm):
         model = Mysubtask
         fields = ['name_subtask', 'description']
 
+# Форма для редактирования проектов
+class Edit_project_forms(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['name', 'description', 'end_date']
+        widgets = {
+            'end_date': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),  # format='%Y-%m-%d' исправляет вставку времени из БД для редактирования  
+        }
+
+    def clean_end_date(self):
+        end_date = self.cleaned_data.get('end_date')
+        if end_date < now().date():
+            raise ValidationError('Дата проекта не может быть в прошлом.')
+        
+        max_task_end_date = self.instance.tasks.aggregate(Max('due_date'))['due_date__max']
+        if max_task_end_date and end_date < max_task_end_date:
+            raise ValidationError(f'Дата окончания проекта должна быть больше даты окончания всех задач в проекте. (Последняя здача проекта {max_task_end_date.strftime('%d %B %Y')})')
+
+        return end_date  
+
 # Форма для редактирования задачи
 class Edit_task_form(forms.ModelForm):
     class Meta:
@@ -103,6 +124,11 @@ class Edit_task_form(forms.ModelForm):
         due_date = self.cleaned_data.get('due_date')
         if due_date < now().date():
             raise ValidationError('Дата задания не может быть в прошлом.')
+        
+        project_end_date = self.instance.project.end_date
+        if due_date > project_end_date:
+            raise ValidationError(f'Дата сдачи задачи не может быть после сдачи проекта! (Дата окончания прокта {project_end_date.strftime('%d %B %Y')})')
+
         return due_date
 
 # Форма для редактирование моих задач

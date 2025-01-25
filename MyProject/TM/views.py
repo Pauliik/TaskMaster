@@ -8,9 +8,13 @@ from django.db.models import Q
 from django.core.mail import send_mail
 from django.forms.models import model_to_dict
 
+from django.http import JsonResponse
+
 from .models import *
 from .forms import *
 from .filters import *
+
+
 
 # Функция для главной страницы 
 def main_page(request, project_name=None):
@@ -247,7 +251,7 @@ def edit_project(request, project_id):
     project = get_object_or_404(Project, id=project_id)
     
     if request.method == 'POST':
-        project_form = New_project_forms(request.POST, instance=project) # instance=project Подставляет данные
+        project_form = Edit_project_forms(request.POST, instance=project) # instance=project Подставляет данные
         if project_form.is_valid():
             project_form.save()
             messages.success(request, f'Проект {project.name} успешно обновлен')
@@ -255,7 +259,7 @@ def edit_project(request, project_id):
         #else:
            # messages.error(request, 'Произошла ошибка при обновлении проекта!')
     else:
-        project_form = New_project_forms(instance=project) 
+        project_form = Edit_project_forms(instance=project) 
 
     return render(request, 'Edit/edit_project.html', {'project_form': project_form,})
 
