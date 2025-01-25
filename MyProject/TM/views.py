@@ -66,23 +66,31 @@ def new_project(request):
     if request.method == 'POST':
         project_form = New_project_forms(request.POST)
         task_form = New_projectTask_forms(request.POST)
-        if project_form.is_valid() and task_form.is_valid():
-            project = project_form.save(commit=False)
-            if request.user.is_authenticated:
-                project.creator = request.user
-            project.save()
-            task = task_form.save(commit=False)
-            task.project = project
-            task.save()
-            send_mail(
-                'У вас появилась новое задание!',
-                f'Руководитель {request.user} выдал вам задание {task.name_task} котророе нужно выполнить до {task.due_date}',
-                'pasha@inbox.ru',
-                [task.executor.email],
-                fail_silently=False,
-            )
-            messages.success(request, f'Проект {project} успешно сохранен')
-            return redirect(reverse('new_project'))
+        
+        try:
+            if project_form.is_valid() and task_form.is_valid():
+                project = project_form.save(commit=False)
+                task = task_form.save(commit=False)
+                if project.end_date < task.due_date:
+                    raise ValidationError('Проект не может быть сдал раньше чем задача к нему!!!')
+                if request.user.is_authenticated:
+                    project.creator = request.user
+                project.save()
+            
+                task.project = project
+                task.save()
+                send_mail(
+                    'У вас появилась новое задание!',
+                    f'Руководитель {request.user} выдал вам задание {task.name_task} котророе нужно выполнить до {task.due_date}',
+                    'pasha@inbox.ru',
+                    [task.executor.email],
+                    fail_silently=False,
+                )
+                messages.success(request, f'Проект {project} успешно сохранен')
+                return redirect(reverse('new_project'))
+        except ValidationError as e:
+            messages.error(request, e.message)
+
     else:
         project_form = New_project_forms()
         task_form = New_projectTask_forms()
@@ -107,8 +115,8 @@ def new_task(request, project_name):
                 )
                 messages.success(request, f'Задача {task} успешна сохранена')
                 return redirect(reverse('new_task', kwargs={'project_name': project.name}))
-                
-        form = New_task_forms()
+        else:  
+            form = New_task_forms()
         return render(request, 'TM/new_task.html', {'form': form})
 
 # Проекты
@@ -163,8 +171,8 @@ def tasksIDo(request):
 
                 messages.success(request, 'Файл успешно сохранено')
                 return redirect(reverse('tasksIDo'))
-        
-    form = Send_file_form()
+        else:
+            form = Send_file_form()
     return render(request, 'TM/tasksIDo.html', {'my_task': my_task, 'form': form, 'filter': filter, 'check': check})
 
 # Создание новой подзадачи
@@ -244,8 +252,8 @@ def edit_project(request, project_id):
             project_form.save()
             messages.success(request, f'Проект {project.name} успешно обновлен')
             return redirect(reverse('my_project'))
-        else:
-            messages.error(request, 'Произошла ошибка при обновлении проекта!')
+        #else:
+           # messages.error(request, 'Произошла ошибка при обновлении проекта!')
     else:
         project_form = New_project_forms(instance=project) 
 
@@ -290,8 +298,8 @@ def edit_task(request, task_id):
                     )
             messages.success(request, f'Проект {task.name_task} успешно обновлен') 
             return redirect(reverse('my_project_task', kwargs={'project_name': project_name}))
-        else:
-            messages.error(request, 'Произошла ошибка при обновлении проекта!')
+        #else:
+            #messages.error(request, 'Произошла ошибка при обновлении проекта!')
     else:
         task_form = Edit_task_form(instance=task) 
 
@@ -307,8 +315,8 @@ def edit_my_task(request, task_id):
             task_form.save()
             messages.success(request, f'Проект {task.name_task} успешно обновлен')
             return redirect(reverse('my_own_task'))
-        else:
-            messages.error(request, 'Произошла ошибка при обновлении проекта!')
+        #else:
+            #messages.error(request, 'Произошла ошибка при обновлении проекта!')
     else:
         task_form = Edit_my_task_form(instance=task) 
 
