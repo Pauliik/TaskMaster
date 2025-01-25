@@ -135,21 +135,7 @@ LOGIN_REDIRECT_URL = '/main' # По умолчанию Django ищет стра�
 LOGOUT_REDIRECT_URL = '/' # По умолчанию Django ищет страницу выхода по адресу /accounts/logout/. но Теперь Django после выхода будет перенаправлять на главную страницу.
 
 
-CELERY_BEAT_SCHEDULE = {
-   'check_due_dates_every_day': {
-       'task': 'TM.tasks.check_due_dates', # Укажите путь до вашей задачи
-       'schedule': crontab(minute='28', hour='03'),  # Запускать в 10:00 каждый день
-   },
-}
-
-CELERY_TASK_ROUTES = {
-    'TM.tasks.*': {'queue': 'celery'},
-}
-
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
-
 
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # Используем SMTP для отправки
 #EMAIL_HOST = 'smtp.inbox.ru'  # Ваш SMTP сервер
@@ -159,9 +145,3 @@ CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 #EMAIL_HOST_PASSWORD = ''  # Пароль приложения 
 #DEFAULT_FROM_EMAIL = 'pasha@inbox.ru' # Адрес, с которого будут отправляться письма
 #SERVER_EMAIL = 'pasha@inbox.ru' # Адрес для отправки сообщений об ошибках
-
-#celery -A MyProject worker -l info
-#celery -A MyProject beat -l info
-
-
-#celery -A TM worker -l info -Q celery,default

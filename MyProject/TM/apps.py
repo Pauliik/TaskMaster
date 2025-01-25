@@ -7,3 +7,5 @@ class TmConfig(AppConfig):
     def ready(self):
         print("at ready")
         import TM.signals
+        from TM.signals import scheduler
+        scheduler()
