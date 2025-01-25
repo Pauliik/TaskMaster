@@ -29,7 +29,7 @@ class Task(models.Model):
         ('in_progress', 'в работе'),
         ('on_review', 'На проверке'),
         ('completed', 'Выполнена'),
-        ('canceled', 'Отменена')
+        
     ]
 
     project = models.ForeignKey(Project, on_delete = models.CASCADE, related_name = 'tasks', verbose_name = 'Проект')
