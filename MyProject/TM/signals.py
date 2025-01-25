@@ -1,13 +1,15 @@
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django.core.mail import send_mail
-
-import schedule
-import time
-from datetime import datetime, timedelta
-from threading import Thread
+from django.conf import settings
 from django.utils.timezone import now
 
+from datetime import datetime, timedelta
+from threading import Thread
+
+import os
+import time
+import schedule
 from .models import *
 
 @receiver(post_save, sender = Task)
@@ -21,8 +23,13 @@ def Project_delete_signals(sender, instance, **kwargs):
 
     for task in instance.tasks.all():
         if task.executor:
-            print(task.executor)
             unique_executors.add(task.executor)
+        for file in task.fileTasks.all():
+            try:
+                path = os.path.join(settings.MEDIA_ROOT, str(file))
+                os.remove(path)
+            except:
+                None
 
     if unique_executors:
         for executor in unique_executors:
@@ -33,8 +40,8 @@ def Project_delete_signals(sender, instance, **kwargs):
                 [executor.email],
                 fail_silently=False,
             )
-
-
+        
+# Задачи для дополнительного патока который будет отправлять сообщения рабочим о том что им завтра нужно сдавать работу
 def start_new_thread(function):
     def decorator(*args, **kwargs):
         t = Thread(target = function, args=args, kwargs=kwargs)
@@ -55,14 +62,10 @@ def my_job():
     print(f"Работа выполняется в отдельном потоке в {datetime.now()}")
     # Получаем завтрашнюю дату
     tomorrow = now().date() + timedelta(days=1)
-    
     # Фильтруем задачи, у которых дедлайн завтра
     tasks = Task.objects.filter(due_date=tomorrow, status='in_progress')
-
     if tasks:
-        for task in tasks:
-            print(f"Напоминание: Завтра дедлайн для задачи '{task.name_task}'")
-            
+        for task in tasks:           
             send_mail(
                 f'Уважаемый {task.executor.username}',
                 f'Завта до 15:00 нужно сдать задачу {task.name_task}',
