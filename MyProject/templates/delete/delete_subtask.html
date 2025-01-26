@@ -1,13 +1,72 @@
 {% extends 'TM/base.html' %}
 
-{% block title %}Удаление проекта{% endblock %}
+{% block title %}Удаление подзадачи{% endblock %}
 
 {% block content %}
-    <h2>Удалить задачу "{{ subtask.name_sub }}"?</h2>
-    <p>Вы уверены, что хотите удалить задачу "{{ subtask.name_sub }}"? Это действие необратимо!</p>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* Фоновый цвет страницы */
+    margin: 0;
+    padding: 20px;
+}
+
+.confirmation-container {
+    max-width: 500px; /* Максимальная ширина области подтверждения */
+    margin: 0 auto; /* Центрирование области */
+    padding: 20px;
+    background-color: #ffffff; /* Белый фон для области */
+    border-radius: 8px; /* Скругленные углы */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Легкая тень */
+}
+
+h2 {
+    color: #e74c3c; /* Цвет заголовка для критического действия */
+}
+
+p {
+    margin-bottom: 20px; /* Отступ ниже параграфа */
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: space-between; /* Пространство между кнопками */
+}
+
+.delete-button {
+    background-color: #e74c3c; /* Красный цвет для кнопки удаления */
+    color: white; /* Цвет текста кнопки */
+    border: none; /* Без рамки */
+    padding: 10px 15px; /* Внутренние отступы кнопки */
+    border-radius: 5px; /* Скругленные углы кнопки */
+    cursor: pointer; /* Указатель руки при наведении */
+    transition: background-color 0.3s; /* Плавный переход цвета кнопки */
+}
+
+.delete-button:hover {
+    background-color: #c0392b; /* Темно-красный цвет при наведении */
+}
+
+.cancel-button {
+    color: #3498db; /* Цвет ссылки для отмены */
+    text-decoration: none; /* Без подчеркивания */
+    padding: 10px 15px; /* Внутренние отступы */
+}
+
+.cancel-button:hover {
+    text-decoration: underline; /* Подчеркивание при наведении */
+}
+</style>
+    <div class="confirmation-container">
+        <h2>Удалить подзадачу "{{ subtask.name_sub }}"?</h2>
+        <p>Вы уверены, что хотите удалить подзадачу "{{ subtask.name_sub }}"? Это действие необратимо!</p>
+        
         <form method="post">
             {% csrf_token %}
-            <button type="submit">Да, удалить</button>
-            <a href="{% url 'tasksIDo' %}">Нет, отменить</a>
+            <div class="confirmation-buttons">
+                <button type="submit" class="delete-button">Да, удалить</button>
+                <a href="{% url 'tasksIDo' %}" class="cancel-button">Нет, отменить</a>
+            </div>
         </form>
+    </div>
 {% endblock %}

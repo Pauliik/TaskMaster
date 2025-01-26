@@ -3,58 +3,195 @@
 {% block title %}Document main{% endblock %}
 
 {% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9; /* Светлый фон страницы */
+        color: #333; /* Темный текст */
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 1200px; /* Максимальная ширина контейнера */
+        margin: auto;
+        padding: 20px;
+        background-color: #ffffff; /* Белый фон для контейнера */
+        border-radius: 10px; /* Закругленные углы контейнера */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Тень для контейнера */
+    }
+
+    h1 {
+        text-align: center; /* Центрирование заголовка */
+        color: #4A90E2; /* Цвет заголовка */
+    }
+
+    .form-container {
+        display: flex; 
+        flex-direction: column; /* Размещение элементов по колонкам */
+        align-items: center; /* Центрирование по горизонтали */
+        margin-bottom: 20px; /* Отступ снизу */
+    }
+
+    .search-row {
+        display: flex; /* Используем flex для расположения элементов в строку */
+        justify-content: center; /* Центрируем содержимое по горизонтали */
+        align-items: center; /* Центрируем содержимое по вертикали */
+        width: 100%; /* Ширина 100% */
+    }
+    
+
+    .filter-container {
+        display: flex;
+        flex-direction: row ; /* Элементы располагаются в колонку */
+        align-items: center; /* Центрирование элементов внутри этого блока */
+        margin-right: 20px; /* Отступ между полями */
+    }
+
+    .filter-container:last-child {
+        margin-right: 0; /* Убираем отступ у последнего элемента */
+    }
+
+    label {
+        margin-right: 20px;
+        font-weight: bold; /* Жирный шрифт для меток */
+    }
+
+    .search-button {
+        padding: 10px 15px;
+        border: none;
+        color: white; 
+        background-color: #4A90E2; /* Цвет кнопки */
+        border-radius: 7px; 
+        cursor: pointer; 
+        transition: background-color 0.3s; /* Плавный переход цвета фона */
+        margin-right: 20px;
+    }
+
+    .search-button:hover {
+        background-color: #357ABD; /* Изменение цвета кнопки при наведении */
+    }
+
+    .custom-list {
+        list-style-type: none; /* Убираем маркеры списка */
+        padding: 0; 
+    }
+
+    .custom-list-item {
+        background-color: #f9f9f9; /* Светлый фон для каждого элемента */
+        border: 1px solid #ddd; /* Серый граница */
+        border-radius: 8px; /* Закругленные углы */
+        padding: 20px; 
+        margin-bottom: 15px; 
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Тень для эффекта приподнятости */
+        transition: transform 0.2s, box-shadow 0.2s; /* Плавный эффект при наведении */
+    }
+
+    .custom-list-item:hover {
+        transform: translateY(-3px); /* Поднимаем карточку при наведении */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Увеличиваем тень при наведении */
+    }
+
+    .custom-link {
+        text-decoration: none; /* Убираем подчеркивание */
+        color: #4A90E2; /* Цвет ссылки */
+        font-weight: bold; /* Жирный шрифт для ссылок */
+    }
+
+    .custom-link:hover {
+        text-decoration: underline; /* Подчеркивание при наведении */
+    }
+
+    .project-actions {
+        margin-top: 10px; 
+    }
+
+    .project-actions a {
+        margin-right: 15px; /* Правый отступ для ссылок на действия */
+        color: #4A90E2; /* Цвет ссылок для действий */
+        font-weight: normal; /* Обычный шрифт для ссылок действия */
+    }
+
+    .project-actions a:hover {
+        text-decoration: underline; /* Подчеркивание при наведении на действие */
+    }
+
+    .notification {
+        color: #e74c3c; /* Красный цвет для уведомлений */
+        text-align: center; 
+        margin: 20px 0; 
+    }
+</style>
+<body>
+<div class="container">
+    <h1>Поиск проектов</h1>
+
     {% if request.user.is_staff %}
-        <form method="get">
+        <form method="get" class="custom-form form-container">
             {% csrf_token %}
-            <div>
-                <div>
+            <div class="search-row">
+                <div class="filter-container">
                     <label for="{{ filter.form.name.id_for_label }}">{{ filter.form.name.label }}</label>
                     {{ filter.form.name }}
                     {% if filter.form.name.errors %}
-                        <div>
+                        <div class="notification">
                             {{ filter.form.name.errors|join:", " }}
                         </div>
                     {% endif %}
                 </div>
 
-                <div>
+                <div class="filter-container">
+                    <label for="{{ filter.form.start_date.id_for_label }}">{{ filter.form.start_date.label }}</label>
+                    {{ filter.form.start_date }}
+                    {% if filter.form.start_date.errors %}
+                        <div class="notification">
+                            {{ filter.form.start_date.errors|join:", " }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="filter-container">
                     <label for="{{ filter.form.end_date.id_for_label }}">{{ filter.form.end_date.label }}</label>
                     {{ filter.form.end_date }}
                     {% if filter.form.end_date.errors %}
-                        <div>
+                        <div class="notification">
                             {{ filter.form.end_date.errors|join:", " }}
                         </div>
                     {% endif %}
                 </div>
-                <p><button type="submit">Найти</button></p>
-                <p><a href="{% url 'my_project' %}"><button type="button">Сбросить</button></a></p>
+                <button type="submit" class="search-button">Найти</button>
+                <a href="{% url 'my_project' %}"><button type="button" class="search-button">Сбросить</button></a>
             </div>
         </form>
-        
+
         {% if check == True %}
-            {% if myproject %}                    
-                {% for project in myproject %}  
-                    <div>
-                        <ul>
-                            <li>
-                                <a href = "{% url 'my_project_task' project.name %}"> Название проекта {{ project.name }} </a>                        
-                                <h3>описание проекта {{ project.description }} </h3>
-                                <h3>Дата сдачи проекта {{ project.end_date }} </h3>
+            {% if myproject %}
+                <div>
+                    <ul class="custom-list">
+                        {% for project in myproject %}
+                            <li class="custom-list-item">
+                                <h2 class="custom-link"><a href="{% url 'my_project_task' project.name %}">Название проекта: {{ project.name }}</a></h2>
+                                <h3>Описание проекта: {{ project.description }}</h3>
+                                <h3>Дата сдачи проекта: {{ project.end_date }}</h3>
+                                <div class="project-actions">
+                                    <a class="custom-link" href="{% url 'edit_project' project.id %}">Редактировать проект</a>
+                                    <a class="custom-link" href="{% url 'delete_project' project.id %}">Удалить проект</a>
+                                    <a class="custom-link" href="{% url 'new_task' project.name %}">Добавить новую задачу</a>
+                                </div>
                             </li>
-                            <a href = "{% url 'edit_project' project.id %}">Редактировать проект</a>
-                            <a href = "{% url 'delete_project' project.id %}">Удалить проект</a>
-                        </ul>
-                        <a href = "{% url 'new_task' project.name %}">Добавить новую задачу</a>
-                    </div> 
-                {% endfor %}  
+                        {% endfor %}
+                    </ul>
+                </div>
             {% else %}
-                <p>поиск ничего не выдал</p>
+                <p>Поиск ничего не выдал</p>
             {% endif %}
         {% else %}
-            <p>У вас нет назначанных задач!!!</p>
+            <p class="notification">У вас нет назначенных задач!</p>
         {% endif %}
     {% else %}
-        <p>У вас нет доступа на эту страницу</p>
-        <a href = "{% url 'main_page' %}">Перейти на главную страницу</a>
+        <p class="notification">У вас нет доступа на эту страницу</p>
+        <a class="custom-link" href="{% url 'main_page' %}">Перейти на главную страницу</a>
     {% endif %}
+</div>
+</body>
 {% endblock %}

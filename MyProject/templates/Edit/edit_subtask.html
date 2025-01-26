@@ -1,48 +1,137 @@
 {% extends 'TM/base.html' %}
 
-{% block title %}Document main{% endblock %}
+{% block title %}Создание подзадачи{% endblock %}
 
 {% block content %}
-    <form method = 'post'>
-        {% csrf_token %}
-        <div>
-            <div>
-                <label for = '{{ subtask_form.name_sub.id_for_label }}'>{{ subtask_form.name_sub.label }}</label>
-                {{ subtask_form.name_sub }}
-                {% if subtask_form.name_sub.errors %}
-                    <div>
-                        {{ subtask_form.name_sub.errors.as_text }}
-                    </div>
-                {% endif %}
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* Фоновый цвет */
+    margin: 0;
+    padding: 20px;
+}
+
+.form-container {
+    max-width: 600px; /* Максимальная ширина формы */
+    margin: 0 auto; /* Центрирование формы */
+    padding: 20px;
+    background-color: #ffffff; /* Белый фон для формы */
+    border-radius: 8px; /* Скругленные углы */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Теневой эффект */
+}
+
+h2 {
+    text-align: center; /* Заголовок по центру */
+    color: #333; /* Цвет заголовка */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column; /* Вертикальное размещение элементов */
+    gap: 15px; /* Пробелы между группами */
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column; /* Вертикальное размещение метки и поля ввода */
+}
+
+label {
+    margin-bottom: 5px; /* Отступ между меткой и полем ввода */
+    font-weight: bold; /* Жирный текст для меток */
+}
+
+input, select, textarea {
+    padding: 10px; /* Внутренние отступы полей */
+    border: 1px solid #ccc; /* Рамка полей */
+    border-radius: 4px; /* Скругленные углы полей */
+    transition: border-color 0.3s; /* Плавный переход для рамки */
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #4A90E2; /* Цвет рамки при фокусе */
+    outline: none; /* Убирает стандартное обводка */
+}
+
+.error-message {
+    color: #e74c3c; /* Красный цвет для ошибок */
+    font-size: 14px; /* Размер шрифта для ошибок */
+}
+
+.submit-button {
+    background-color: #4A90E2; /* Цвет кнопки */
+    color: white; /* Цвет текста кнопки */
+    border: none; /* Без рамки */
+    padding: 10px 15px; /* Внутренние отступы кнопки */
+    border-radius: 5px; /* Скруглённые углы кнопки */
+    cursor: pointer; /* Указатель руки при наведении */
+    transition: background-color 0.3s; /* Плавный переход цвета кнопки */
+    width: 100%; /* Кнопка занимает полную ширину */
+}
+
+.submit-button:hover {
+    background-color: #357ABD; /* Цвет кнопки при наведении */
+}
+
+.messages {
+    margin-top: 15px; /* Отступ сверху для сообщений */
+    list-style: none; /* Убрать маркеры списка */
+    padding: 0; /* Убрать отступы */
+}
+
+.messages li {
+    background-color: #e0f7fa; /* Цвет фона для сообщений */
+    padding: 10px; /* Внутренние отступы для сообщений */
+    border-radius: 4px; /* Скругленные углы сообщений */
+    margin-bottom: 10px; /* Отступ между сообщениями */
+}
+</style>
+    <div class="form-container">
+        <form method='post'>
+            {% csrf_token %}
+            <h2>Создание подзадачи</h2>
+
+            <div class="form-group">
+                <div class="form-field">
+                    <label for='{{ subtask_form.name_sub.id_for_label }}'>{{ subtask_form.name_sub.label }}</label>
+                    {{ subtask_form.name_sub }}
+                    {% if subtask_form.name_sub.errors %}
+                        <div class="error-message">
+                            {{ subtask_form.name_sub.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-field">
+                    <label for='{{ subtask_form.description.id_for_label }}'>{{ subtask_form.description.label }}</label>
+                    {{ subtask_form.description }}
+                    {% if subtask_form.description.errors %}
+                        <div class="error-message">
+                            {{ subtask_form.description.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-field">
+                    <label for='{{ subtask_form.status.id_for_label }}'>{{ subtask_form.status.label }}</label>
+                    {{ subtask_form.status }}
+                    {% if subtask_form.status.errors %}
+                        <div class="error-message">
+                            {{ subtask_form.status.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
             </div>
 
-            <div>
-                <label for = '{{ subtask_form.description.id_for_label }}'>{{ subtask_form.description.label }}</label>
-                {{ subtask_form.description }}
-                {% if subtask_form.description.errors %}
-                    <div>
-                        {{ subtask_form.description.errors.as_text }}
-                    </div>
-                {% endif %}
-            </div>
+            <button type='submit' class="submit-button">Сохранить</button>
+        </form>
 
-            <div>
-                <label for = '{{ subtask_form.status.id_for_label }}'>{{ subtask_form.status.label }}</label>
-                {{ subtask_form.status }}
-                {% if subtask_form.status.errors %}
-                    <div>
-                        {{ subtask_form.status.errors.as_text }}
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-        <button type = 'submit'>Сохранить</button>
-    </form>
-    {% if messages %}
-        <ul class = 'messages'>
-            {% for message in messages %}
-                <li {% if message.tags %} class = '{{ message.tags }}' {% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+        {% if messages %}
+            <ul class='messages'>
+                {% for message in messages %}
+                    <li {% if message.tags %} class='{{ message.tags }}' {% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 {% endblock %}

@@ -3,15 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Планирование задач</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9; /* Светлый фон */
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px; /* Максимальная ширина контейнера */
+            margin: 0 auto; /* Центрируем контейнер */
+            padding: 20px;
+            background-color: #ffffff; /* Белый фон для контейнера */
+            border-radius: 8px; /* Скругленные углы */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
+        }
+
+        .header {
+            text-align: center; /* Центрируем текст */
+            margin-bottom: 20px; /* Отступ снизу */
+        }
+
+        .header a {
+            display: inline-block; /* Блоковая ссылка для удобства */
+            padding: 10px 20px; /* Внутренние отступы ссылки */
+            background-color: #4A90E2; /* Цвет фона ссылки */
+            color: white; /* Цвет текста ссылки */
+            text-decoration: none; /* Убираем подчеркивание */
+            border-radius: 5px; /* Скругленные углы для ссылки */
+            transition: background-color 0.3s; /* Плавный переход цвета при наведении */
+        }
+
+        .header a:hover {
+            background-color: #357ABD; /* Цвет фона при наведении */
+        }
+
+        .description {
+            font-size: 16px; /* Размер шрифта для описания */
+            line-height: 1.5; /* Высота строки для лучшей читаемости */
+            color: #333; /* Цвет текста */
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <a href="{% url 'login' %}">Начать Планирование задач</a>
-        
-    </div>
-    <div>
-        <p>Тут будет описания работы сайта а пока просто информация ла ла ла ла!!!</p>
+    <div class="container">
+        <div class="header">
+            <h1>Добро пожаловать!</h1>
+            <a href="{% url 'login' %}">Начать Планирование задач</a>
+        </div>
+        <div>
+            <p class="description">Здесь вы сможете удобно планировать свои задачи, отслеживать их выполнение и оптимизировать свое время. Не стесняйтесь добавлять новые задачи,
+                устанавливать приоритеты и назначать исполнителей. Используйте данный инструмент, чтобы улучшить свою продуктивность и организованность. 
+                Ла ла ла ла, а пока просто информация!</p>
+        </div>
     </div>
 </body>
 </html>

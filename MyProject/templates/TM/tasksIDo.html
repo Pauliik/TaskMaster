@@ -3,120 +3,247 @@
 {% block title %}Document main{% endblock %}
 
 {% block content %}
-    <form method="get">
-        {% csrf_token %}
-        <div>
-            <div>
-                <label for="{{ filter.form.name_task.id_for_label }}">{{ filter.form.name_task.label }}</label>
-                {{ filter.form.name_task }}
-                {% if filter.form.name_task.errors %}
-                    <div>
-                        {{ filter.form.name_task.errors|join:", " }}
-                    </div>
-                {% endif %}
-            </div>
-            
-            <div>
-                <label for="{{ filter.form.priority.id_for_label }}">{{ filter.form.priority.label }}</label>
-                {{ filter.form.priority }}
-                {% if filter.form.priority.errors %}
-                    <div>
-                        {{ filter.form.priority.errors|join:", " }}
-                    </div>
-                {% endif %}
-            </div>
-                
-            <div>
-                <label for="{{ filter.form.status.id_for_label }}">{{ filter.form.status.label }}</label>
-                {{ filter.form.status }}
-                {% if filter.form.status.errors %}
-                    <div>
-                        {{ filter.form.status.errors|join:", " }}
-                    </div>
-                {% endif %}
-            </div>
+<style>
+    .container {
+        max-width: 1200px; /* Максимальная ширина контейнера */
+        margin: auto;
+        padding: 20px;
+        background-color: #ffffff; /* Белый фон для контейнера */
+        border-radius: 10px; /* Закругленные углы контейнера */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Тень для контейнера */
+    }
 
-            <div>
-                <label for="{{ filter.form.due_date.id_for_label }}">{{ filter.form.due_date.label }}</label>
-                {{ filter.form.due_date }}
-                {% if filter.form.due_date.errors %}
-                    <div>
-                        {{ filter.form.due_date.errors|join:", " }}
-                    </div>
-                {% endif %}
-            </div>
-            <p><button type="submit">Найти</button></p>
-            <p><a href="{% url 'tasksIDo' %}"><button type="button">Сбросить</button></a></p>
-        </div>
-    </form>
+    .form-container {
+        display: flex; 
+        flex-direction: column; /* Размещение элементов по колонкам */
+        align-items: flex-start; /* Центрирование по горизонтали */
+        margin-bottom: 20px; /* Отступ снизу */
+    }
 
-    {% if messages %}
-        <ul class = 'messages'>
-            {% for message in messages %}
-                <li {% if message.tags %} class = '{{ message.tags }}' {% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    .search-row {
+        display: flex; /* Используем flex для расположения элементов в строку */
+        justify-content: flex-start; /* Центрируем содержимое по горизонтали */
+        align-items: center; /* Центрируем содержимое по вертикали */
+        width: 100%; /* Ширина 100% */
+        margin-bottom: 15px; /* Отступ снизу */
+    }
 
-    {% if check == True %} 
-        {% if my_task %}          
-            {% for task in my_task %} 
-                <div>
-                    <ul>
-                        <li>
-                            <h3>задачу относится к проекту {{ task.project }} </h3>
-                            <h3>описание проекта {{ task.project.description }} </h3>
-                        </li>
-                    </ul>
+    .filter-container {
+        display: flex; /* Используем flex для расположения элементов в строку */
+        flex-direction: row; /* Элементы располагаются в колонку */
+        align-items: center; /* Центрирование элементов внутри этого блока */
+        margin-right: 20px; /* Отступ между полями */
+    }
 
-                    <ul>
-                        <ol>
-                            <li><h4>Название задачи {{ task.name_task }}</h4></li>
-                            <li><h4>Опмсание задачи {{ task.description }}</h4></li>
-                            <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
-                            <li><h4>Статус {{ task.get_status_display }}</h4></li>
-                            <li><h4>Срок выполнения {{ task.due_date }}</h4></li>
-                            {% for subtask in task.subtask.all %}                      
-                                <ul>
-                                    <li><h4>Название подзадачи {{ subtask.name_sub }}</h4></li>
-                                </ul>
+    .filter-container:last-child {
+        margin-right: 0; /* Убираем отступ у последнего элемента */
+    }
 
-                                <ul>
-                                    <ol>
-                                        <li><h4>Описание подзадачи {{ subtask.description }}</h4></li>
-                                        <li><h4>Статус подзадачи {{ subtask.status }}</h4></li>
-                                    </ol>
-                                </ul>
-                                <a href = "{% url 'delete_subtask' subtask.id %}">Удалить подзадачу</a>
-                                <a href = "{% url 'edit_subtask' subtask.id %}">Редактировать подзадачу</a>
-                            {% endfor %}
-                            <a href = "{% url 'new_subtask' task.id %}">Создать новую подзадачу</a>
-                        </ol>
-                    </ul>  
-                    <div>
-                        <form method = 'post' enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <input type="hidden" name="task_id" value="{{ task.id }}">  <!-- Скрытое поле с ID задачи -->
-                            <div>
-                                <div>
-                                    <label for = '{{ form.file.id_for_label }}'>{{ form.file.label }}</label>
-                                    {{ form.file }}
-                                    {% if form.file.errors %}
-                                        <div>
-                                            {{ form.file.errors.as_text }}
-                                        </div>
-                                    {% endif %}
-                                </div>
+    label {
+        margin-right: 20px;
+        font-weight: bold; /* Жирный шрифт для меток */
+    }
+
+    .search-button {
+        padding: 10px 15px;
+        border: none;
+        color: white; 
+        background-color: #4A90E2; /* Цвет кнопки */
+        border-radius: 7px; 
+        cursor: pointer; 
+        transition: background-color 0.3s; /* Плавный переход цвета фона */
+        margin-left: 10px; /* Отступ слева от кнопок */
+    }
+
+    .button {
+        padding: 10px 15px;
+        border: none;
+        color: white; 
+        background-color: #4A90E2; /* Цвет кнопки */
+        border-radius: 7px; 
+        cursor: pointer; 
+        transition: background-color 0.3s; /* Плавный переход цвета фона */
+        margin: 10px 10px 0px 0px; /* Отступ слева от кнопок */
+    }
+
+    .search-button:hover {
+        background-color: #357ABD; /* Изменение цвета кнопки при наведении */
+    }
+
+    .button:hover {
+        background-color: #357ABD; /* Изменение цвета кнопки при наведении */
+    }
+
+    .notification {
+        color: #e74c3c; /* Красный цвет для уведомлений */
+        text-align: center; 
+        margin: 20px 0; 
+    }
+
+    .custom-list {
+        list-style-type: none; /* Убираем маркеры списка */
+        padding: 0; 
+    }
+
+    .custom-list-item {
+        background-color: #f9f9f9; /* Светлый фон для каждого элемента */
+        border: 1px solid #ddd; /* Серый граница */
+        border-radius: 8px; /* Закругленные углы */
+        padding: 20px; 
+        margin-bottom: 15px; 
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Тень для эффекта приподнятости */
+        transition: transform 0.2s, box-shadow 0.2s; /* Плавный эффект при наведении */
+    }
+
+    .custom-list-item:hover {
+        transform: translateY(-3px); /* Поднимаем карточку при наведении */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Увеличиваем тень при наведении */
+    }
+
+    .project-info {
+        background-color: #f2f2f2; /* Светлый фон для описания проекта */
+        border-bottom: 1px solid #ddd; /* Граница внизу */
+        padding: 10px; /* Отступ внутри */
+        margin-bottom: 10px; /* Отступ до следующего элемента */
+    }
+
+    .task {
+        background-color: #e7f3fe; /* Светлый фон для задачи */
+        border-left: 5px solid #4A90E2; /* Синяя граница слева */
+        padding: 10px; /* Отступ внутри задачи */
+        margin: 10px 0; /* Вертикальный отступ между задачами */
+        border-radius: 5px; /* Закругленные углы для задачи */
+    }
+
+    .subtask {
+        background-color: #ddf4fe; /* Светлый фон для подзадачи */
+        border-left: 5px solid #85C1E9; /* Голубая граница слева */
+        padding: 10px; /* Отступ внутри подзадачи */
+        margin: 10px 0; /* Вертикальный отступ между подзадачами */
+        border-radius: 5px; /* Закругленные углы для подзадачи */
+    }
+
+    .custom-link {
+        text-decoration: none; /* Убираем подчеркивание */
+        color: #4A90E2; /* Цвет ссылки */
+        font-weight: bold; /* Жирный шрифт для ссылок */
+    }
+
+    .custom-link:hover {
+        text-decoration: underline; /* Подчеркивание при наведении */
+    }
+</style>
+
+    <div class="container">
+        <form method="get">
+            {% csrf_token %}
+            <div class="form-container">
+                <div class="search-row">
+                    <div class="filter-container">
+                        <label for="{{ filter.form.name_task.id_for_label }}">{{ filter.form.name_task.label }}</label>
+                        {{ filter.form.name_task }}
+                        {% if filter.form.name_task.errors %}
+                            <div class="notification">
+                                {{ filter.form.name_task.errors|join:", " }}
                             </div>
-                            <button type = 'submit'>Отправить</button>
-                        </form>
-                    </div>                  
-                </div>         
-            {% endfor %}  
-        {% else %}
-            <p> поиск ничего не выдал</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="filter-container">
+                        <label for="{{ filter.form.priority.id_for_label }}">{{ filter.form.priority.label }}</label>
+                        {{ filter.form.priority }}
+                        {% if filter.form.priority.errors %}
+                            <div class="notification">
+                                {{ filter.form.priority.errors|join:", " }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="filter-container">
+                        <label for="{{ filter.form.status.id_for_label }}">{{ filter.form.status.label }}</label>
+                        {{ filter.form.status }}
+                        {% if filter.form.status.errors %}
+                            <div class="notification">
+                                {{ filter.form.status.errors|join:", " }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="filter-container">
+                        <label for="{{ filter.form.due_date.id_for_label }}">{{ filter.form.due_date.label }}</label>
+                        {{ filter.form.due_date }}
+                        {% if filter.form.due_date.errors %}
+                            <div class="notification">
+                                {{ filter.form.due_date.errors|join:", " }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <button type="submit" class="search-button">Найти</button>
+                    <a href="{% url 'tasksIDo' %}"><button type="button" class="search-button">Сбросить</button></a>
+                </div>
+            </div>
+        </form>
+
+        {% if messages %}
+            <ul class="messages custom-list">
+                {% for message in messages %}
+                    <li class="custom-list-item {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</li>
+                {% endfor %}
+            </ul>
         {% endif %}
-    {% else %}
-        <p>У вас нет назначанных задач!!!</p>
-    {% endif %}
+
+        {% if check == True %} 
+            {% if my_task %}          
+                {% for task in my_task %} 
+                    <div class="custom-list-item">
+                        <div class="project-info">
+                            <h3>Задача относится к проекту {{ task.project }} </h3>
+                            <p>Описание проекта {{ task.project.description }} </p>
+                        </div>
+                        <div class="task">
+                            <h4>Название задачи {{ task.name_task }}</h4>
+                            <p>Описание задачи {{ task.description }}</p>
+                            <p>Приоритет {{ task.get_priority_display }}</p>
+                            <p>Статус {{ task.get_status_display }}</p>
+                            <p>Срок выполнения {{ task.due_date }}</p>
+                            <a href="{% url 'new_subtask' task.id %}" class="custom-link">Создать новую подзадачу</a>
+                            {% for subtask in task.subtask.all %}                      
+                                <div class="subtask">
+                                    <h4>Название подзадачи: {{ subtask.name_sub }}</h4>
+                                    <p>Описание подзадачи: {{ subtask.description }}</p>
+                                    <p>Статус подзадачи: {{ subtask.status }}</p>
+                                    <a href="{% url 'delete_subtask' subtask.id %}" class="custom-link">Удалить подзадачу</a>
+                                    <a href="{% url 'edit_subtask' subtask.id %}" class="custom-link">Редактировать подзадачу</a>
+                                </div>
+                            {% endfor %}
+                            
+                        </div>  
+                        <div>
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" name="task_id" value="{{ task.id }}">  
+                                <div>
+                                    <div>
+                                        <label for="{{ form.file.id_for_label }}">{{ form.file.label }}</label>
+                                        {{ form.file }}
+                                        {% if form.file.errors %}
+                                            <div class="notification">
+                                                {{ form.file.errors.as_text }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <button type="submit" class="button">Отправить</button>
+                            </form>
+                        </div>                  
+                    </div>         
+                {% endfor %}  
+            {% else %}
+                <p class="notification">Поиск ничего не выдал</p>
+            {% endif %}
+        {% else %}
+            <p class="notification">У вас нет назначенных задач!!!</p>
+        {% endif %}
+    </div>
 {% endblock %}

@@ -1,18 +1,37 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Вход</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h2>Вход</h2>
-    <a class="nav-link" href="{% url 'password_reset' %}">Забыли пароль?</a>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Войти</button>
-    </form>
-    <a class="nav-link" href="{% url 'register' %}">Регистрация</a>
+    <header>
+        <nav>
+            <ul>
+                <li><a class="nav-link" href="{% url 'password_reset' %}">Забыли пароль?</a></li>
+                <li class="active"><a href="{% url 'login' %}">Войти</a></li>
+                <li><a class="nav-link" href="{% url 'register' %}">Регистрация</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="login-section">
+            <h1>Вход</h1>
+            <p>Пожалуйста, введите ваши учетные данные для входа в систему</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-primary">Войти</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025</p>
+    </footer>
 </body>
 </html>

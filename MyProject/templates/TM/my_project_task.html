@@ -2,90 +2,224 @@
 
 {% block title %}Document main{% endblock %}
 
+
+
 {% block content %}
-    <form method="get">
-        {% csrf_token %}
-        <div>
-            <div>
-                <label for="{{ filter.form.name_task.id_for_label }}">{{ filter.form.name_task.label }}</label>
-                {{ filter.form.name_task }}
-                {% if filter.form.name_task.errors %}
-                    <div>
-                        {{ filter.form.name_task.errors|join:", " }}
-                    </div>
-                {% endif %}
-            </div>
-            
-            <div>
-                <label for="{{ filter.form.priority.id_for_label }}">{{ filter.form.priority.label }}</label>
-                {{ filter.form.priority }}
-                {% if filter.form.priority.errors %}
-                    <div>
-                        {{ filter.form.priority.errors|join:", " }}
-                    </div>
-                {% endif %}
-            </div>
-                
-            <div>
-                <label for="{{ filter.form.status.id_for_label }}">{{ filter.form.status.label }}</label>
-                {{ filter.form.status }}
-                {% if filter.form.status.errors %}
-                    <div>
-                        {{ filter.form.status.errors|join:", " }}
-                    </div>
-                {% endif %}
-            </div>
+<style>
+    .container {
+        max-width: 1200px; /* Максимальная ширина контейнера */
+        margin: auto;
+        padding: 20px;
+        background-color: #ffffff; /* Белый фон для контейнера */
+        border-radius: 10px; /* Закругленные углы контейнера */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Тень для контейнера */
+    }
 
-            <div>
-                <label for="{{ filter.form.executor.id_for_label }}">{{ filter.form.executor.label }}</label>
-                {{ filter.form.executor }}
-                {% if filter.form.executor.errors %}
-                    <div>
-                        {{ filter.form.executor.errors|join:", " }}
-                    </div>
-                {% endif %}
-            </div>
+    h1 {
+        text-align: center; /* Центрирование заголовка */
+        color: #4A90E2; /* Цвет заголовка */
+    }
 
-            <div>
-                <label for="{{ filter.form.due_date.id_for_label }}">{{ filter.form.due_date.label }}</label>
-                {{ filter.form.due_date }}
-                {% if filter.form.due_date.errors %}
-                    <div>
-                        {{ filter.form.due_date.errors|join:", " }}
-                    </div>
-                {% endif %}
-            </div>
-            <p><button type="submit">Найти</button></p>
-            <p><a href="{% url 'my_project_task' project_name=project_name %}"><button type="button">Сбросить</button></a></p>
-        </div>
-    </form>
+    .form-container {
+        display: flex; 
+        flex-direction: column; /* Размещение элементов по колонкам */
+        align-items: center; /* Центрирование по горизонтали */
+        margin-bottom: 20px; /* Отступ снизу */
+    }
+
+    .search-row {
+        display: flex; /* Используем flex для расположения элементов в строку */
+        justify-content: center; /* Центрируем содержимое по горизонтали */
+        align-items: center; /* Центрируем содержимое по вертикали */
+        width: 100%; /* Ширина 100% */
+    }
     
-    {% if check == True %}
-        {% if tasks %}                    
-            {% for task in tasks %}  
-                <div>
-                    <ul>
-                        <li><h4>Название задачи {{ task.name_task }}</h4></li>
+    .filter-container {
+        display: flex;
+        flex-direction: row ; /* Элементы располагаются в колонку */
+        align-items: center; /* Центрирование элементов внутри этого блока */
+        margin-right: 20px; /* Отступ между полями */
+    }
+
+    .filter-container:last-child {
+        margin-right: 0; /* Убираем отступ у последнего элемента */
+    }
+
+    label {
+        margin-right: 20px;
+        font-weight: bold; /* Жирный шрифт для меток */
+    }
+
+    .search-button {
+        padding: 10px 15px;
+        border: none;
+        color: white; 
+        background-color: #4A90E2; /* Цвет кнопки */
+        border-radius: 7px; 
+        cursor: pointer; 
+        transition: background-color 0.3s; /* Плавный переход цвета фона */
+        margin-right: 20px;
+    }
+
+    .search-button:hover {
+        background-color: #357ABD; /* Изменение цвета кнопки при наведении */
+    }
+
+    .custom-list {
+        list-style-type: none; /* Убираем маркеры списка */
+        padding: 0; 
+    }
+
+    .custom-list-item {
+        background-color: #f9f9f9; /* Светлый фон для каждого элемента */
+        border: 1px solid #ddd; /* Серый граница */
+        border-radius: 8px; /* Закругленные углы */
+        padding: 20px; 
+        margin-bottom: 15px; 
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Тень для эффекта приподнятости */
+        transition: transform 0.2s, box-shadow 0.2s; /* Плавный эффект при наведении */
+    }
+
+    .custom-list-item:hover {
+        transform: translateY(-3px); /* Поднимаем карточку при наведении */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Увеличиваем тень при наведении */
+    }
+
+    .custom-link {
+        text-decoration: none; /* Убираем подчеркивание */
+        color: #4A90E2; /* Цвет ссылки */
+        font-weight: bold; /* Жирный шрифт для ссылок */
+    }
+
+    .custom-link:hover {
+        text-decoration: underline; /* Подчеркивание при наведении */
+    }
+
+    .project-actions {
+        margin-top: 10px; 
+    }
+
+    .project-actions a {
+        margin-right: 15px; /* Правый отступ для ссылок на действия */
+        color: #4A90E2; /* Цвет ссылок для действий */
+        font-weight: normal; /* Обычный шрифт для ссылок действия */
+    }
+
+    .project-actions a:hover {
+        text-decoration: underline; /* Подчеркивание при наведении на действие */
+    }
+
+    .notification {
+        color: #e74c3c; /* Красный цвет для уведомлений */
+        text-align: center; 
+        margin: 20px 0; 
+    }
+
+    /* Стиль для выделения файлов */
+    .file-link {
+        display: inline-block; /* Отображение в виде блока */
+        padding: 10px; /* Отступ внутри блока */
+        background-color: #e6f7ff; /* Светлый фон для файлов */
+        border: 1px dashed #4A90E2; /* Пунктирная рамка */
+        border-radius: 4px; /* Закругленные углы */
+        color: #4A90E2; /* Цвет текста для файлов */
+        text-decoration: none; /* Убираем подчеркивание */
+        margin-top: 5px; /* Отступ сверху */
+        transition: background-color 0.3s; /* Плавный переход фона */
+    }
+
+    .file-link:hover {
+        background-color: #d0ebff; /* Изменение фона при наведении */
+    }
+</style>
+<form method="get" class="form-container">
+    {% csrf_token %}
+    <div class="search-row">
+        <div class="filter-container">
+            <label for="{{ filter.form.name_task.id_for_label }}">{{ filter.form.name_task.label }}</label>
+            {{ filter.form.name_task }}
+            {% if filter.form.name_task.errors %}
+                <div class="notification">
+                    {{ filter.form.name_task.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="filter-container">
+            <label for="{{ filter.form.priority.id_for_label }}">{{ filter.form.priority.label }}</label>
+            {{ filter.form.priority }}
+            {% if filter.form.priority.errors %}
+                <div class="notification">
+                    {{ filter.form.priority.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="filter-container">
+            <label for="{{ filter.form.status.id_for_label }}">{{ filter.form.status.label }}</label>
+            {{ filter.form.status }}
+            {% if filter.form.status.errors %}
+                <div class="notification">
+                    {{ filter.form.status.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="filter-container">
+            <label for="{{ filter.form.executor.id_for_label }}">{{ filter.form.executor.label }}</label>
+            {{ filter.form.executor }}
+            {% if filter.form.executor.errors %}
+                <div class="notification">
+                    {{ filter.form.executor.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="filter-container">
+            <label for="{{ filter.form.due_date.id_for_label }}">{{ filter.form.due_date.label }}</label>
+            {{ filter.form.due_date }}
+            {% if filter.form.due_date.errors %}
+                <div class="notification">
+                    {{ filter.form.due_date.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="search-button">Найти</button>
+        <a href="{% url 'my_project_task' project_name=project_name %}"><button type="button" class="search-button">Сбросить</button></a>
+    </div>
+</form>
+
+{% if check == True %}
+    {% if tasks %}                    
+        <div>
+            <ul class="custom-list">
+                {% for task in tasks %}  
+                    <li class="custom-list-item">
+                        <h2 class="custom-link">Название задачи: {{ task.name_task }}</h2>
                         <ol>
-                            <li><h4>Опмсание задачи {{ task.description }}</h4></li>
-                            <li><h4>Приоритет {{ task.get_priority_display }}</h4></li>
-                            <li><h4>Статус {{ task.get_status_display }}</h4></li>
-                            <li><h4>исполнитель {{ task.executor }}</h4></li>
-                            <li><h4>Срок выполнения {{ task.due_date }}</h4></li> 
+                            <li><h4>Описание задачи: {{ task.description }}</h4></li>
+                            <li><h4>Приоритет: {{ task.get_priority_display }}</h4></li>
+                            <li><h4>Статус: {{ task.get_status_display }}</h4></li>
+                            <li><h4>Исполнитель: {{ task.executor }}</h4></li>
+                            <li><h4>Срок выполнения: {{ task.due_date }}</h4></li> 
                             {% for file in task.fileTasks.all %}
-                                <a href="{{ file.file.url }}" download="{{ file.filename  }}">{{ file.filename  }}</a> 
+                                <a href="{{ file.file.url }}" download="{{ file.filename }}" class="file-link">{{ file.filename }}</a>
                             {% endfor %}          
                         </ol>
-                        <a href = "{% url 'edit_task' task.id %}?project_name={{ task.project.name }}">Редактировать задачу</a>
-                        
-                        <a href = "{% url 'delete_task' task.id %}?project_name={{ task.project.name }}">Удалить задачу</a>
-                    </ul>
-                </div> 
-            {% endfor %}  
-        {% else %}
-            <p>поиск ничего не выдал</p>
-        {% endif %}
+                        <div class="project-actions">
+                            <a class="custom-link" href="{% url 'edit_task' task.id %}?project_name={{ task.project.name }}">Редактировать задачу</a>
+                            <a class="custom-link" href="{% url 'delete_task' task.id %}?project_name={{ task.project.name }}">Удалить задачу</a>
+                        </div>
+                    </li> 
+                {% endfor %}
+            </ul>
+        </div>
     {% else %}
-        <p>В этом проекте нет задач</p>
+        <p>Поиск ничего не выдал</p>
     {% endif %}
+{% else %}
+    <p class="notification">В этом проекте нет задач</p>
+{% endif %}
+
 {% endblock %}

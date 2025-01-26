@@ -1,28 +1,44 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Войти или Зарегистрироваться</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>Регистрация</h1>
-    <div>
-        <form method="post">
-            {% csrf_token %}
-                {% for field in form %}
-                    <div>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'login' %}">Войти</a></li>
+                <li class="active"><a href="{% url 'register' %}">Зарегистрироваться</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="register-section">
+            <h1>Зарегистрироваться</h1>
+            <p>Пожалуйста, заполните следующие поля для создания учетной записи</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {% for field in form %}
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {{ field }}
                         {% if field.errors %}
                             {% for error in field.errors %}
-                                <div>{{ error }}</div>
+                                <div class="error">{{ error }}</div>
                             {% endfor %}
                         {% endif %}
-                    </div>
-                {% endfor %}
-            <button type="submit">Зарегистрироваться</button>
-        </form>
-    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025</p>
+    </footer>
 </body>
 </html>
