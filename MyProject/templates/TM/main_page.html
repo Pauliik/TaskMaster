@@ -3,55 +3,135 @@
 {% block title %}Document main{% endblock %}
 
 {% block content %}
-    <h1>эта главная страница</h1>
+    <style>
+        .main-container {
+            display: flex;
+            height: 86vh; /* или другое значение в зависимости от ваших предпочтений */
+        }
 
-    <div>
-        {% if projects %}              
-            {% for project in projects %}  
-                <div>
-                    <a href = "{% url 'main_page' project.name %}">Проект {{ project.name }}</a>
-                </div> 
-            {% endfor %}  
-        {% else %}
-            <p>У вас нет проектов!!!</p>
-        {% endif %}
-    </div>
+        .projects-list {
+            width: 250px; /* Ширина блока с проектами */
+            background: #35424a; /* Цвет фона для лучшего контраста */
+            padding: 10px;
+            border-right: 1px solid #ccc; /* Разделительная линия */            
+        }
+        .projects-list a {
+            color: #ffffff;
+            text-decoration: none;
+        }
 
-    <div>
-        {% if project %}
-            {% if comments %}  
-                <ul>
-                    <li><p>чат к проекту {{ project }}</p></li>
-                </ul>            
-                {% for comment in comments %}  
+        .chat-area {
+            flex: 1; /* Занимает все оставшееся пространство */
+            padding-left: 10px;
+            display: flex;
+            flex-direction: column; /* Чтобы элементы внутри выстраивались вертикально */
+        }
+
+        .chat-messages {
+            flex: 3; /* Занимает всё доступное пространство для сообщений */
+            overflow-y: auto; /* Добавляет прокрутку по вертикали */
+            margin-bottom: 10px; /* Отступ снизу для формы */
+            border: 1px solid #ccc; /* Рамка вокруг области чата */
+            padding: 10px;
+        }
+
+        .comment {
+            border-bottom: 1px solid #ddd; /* Разделитель между комментариями */
+            padding: 5px 0; /* Отступы к комментариям */
+        }
+
+        .chat-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            background: #35424a;
+            color: #ffffff;
+        }
+
+        .form-block {
+            flex: 1;
+            padding: 10px;
+        }
+
+        .form-block-form {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .comment {
+            border-bottom: 1px solid #ddd; /* Разделитель между комментариями */
+            padding: 5px 0; /* Отступы к комментариям */
+        }
+
+        .comment-author-and-date {
+            display: flex;
+            align-items: center;
+        }
+
+        .comment-text {
+            padding-left: 10px;
+        }
+    </style>    
+    <div class="main-container">
+        <div class="projects-list">
+            {% if projects %}              
+                {% for project in projects %}  
                     <div>
-                        <ul>
-                            <li><p>Отправитель {{ comment.author_comment }} отправлено {{ comment.date_creation }}</p></li>
-                            <p> {{ comment.comment_text }}</p>
-                        </ul>
+                        <a href="{% url 'main_page' project.name %}">Проект {{ project.name }}</a>
                     </div> 
                 {% endfor %}  
             {% else %}
-                <p>Пока у этого проекта нет обсуждений</p>
+                <p>У вас нет проектов!!!</p>
             {% endif %}
+        </div>
 
-            <form method = 'post'>
-                {% csrf_token %}
-                <div>
-                    <div>
-                        <label for = '{{ form.name.id_for_label }}'>{{ form.comment_text.label }}</label>
+        <div class="chat-area">
+            {% if project %}
+                <div class="chat-header">
+                    <p>Чат к проекту {{ project }}</p>
+                </div>
+                <div class="chat-messages">
+                    {% if comments %}  
+                        {% for comment in comments %}  
+                            <div class="comment">
+                                <div class="comment-author-and-date">
+                                    {{ comment.author_comment }} ({{ comment.date_creation }})
+                                </div>
+                                <div class="comment-text">
+                                    {{ comment.comment_text }}
+                                </div>
+                            </div> 
+                        {% endfor %}  
+                    {% else %}
+                        <p>Пока у этого проекта нет обсуждений</p>
+                    {% endif %}
+                </div>
+                <div class="form-block">
+                    <form method='post' class="form-block-form">
+                        {% csrf_token %}
                         {{ form.comment_text }}
                         {% if form.comment_text.errors %}
                             <div>
                                 {{ form.comment_text.errors.as_text }}
                             </div>
                         {% endif %}
-                    </div>
-                    <button type = 'submit'>Отправить</button>
+                        <button type='submit'>Отправить</button>
+                    </form>
                 </div>
-            </form>
-        {% else %}
-            <p>Для начала переписки выберете чат</p>
-        {% endif %}
+            {% else %}
+                <p>Для начала переписки выберете чат</p>
+            {% endif %}
+        </div>
     </div>
+
+    <script>
+        // Функция для прокрутки к низу области сообщений
+        function scrollToBottom() {
+            var chatMessages = document.querySelector('.chat-messages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        // Прокручиваем вниз при загрузке страницы
+        window.onload = scrollToBottom;
+    </script>
 {% endblock %}
