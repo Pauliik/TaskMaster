@@ -4,10 +4,8 @@
 
 {% block content %}
     
-
     <form method="get">
         {% csrf_token %}
-        
         <div>           
             <div>
                 <label for="{{ filter.form.text_search.id_for_label }}">{{ filter.form.text_search.label }}</label>
@@ -53,7 +51,6 @@
                             <h3>Название задачи {{ task.name_task }} </h3>  
                         </li>
                     </ul>
-
                     <ul>
                         <ol>
                             <li><h4>Опмсание задачи {{ task.description }}</h4></li>

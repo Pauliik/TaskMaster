@@ -5,50 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Document{% endblock %}</title>
     {% block script  %}{% endblock  %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        nav {
+            background: #35424a;
+            color: #ffffff;
+            padding: 15px;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            margin-top: 20px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-left {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-left li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        .nav-left li a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .nav-left li a:hover {
+            text-decoration: underline;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-right span {
+            margin-right: 10px;
+            color: #ffffff;
+        }
+        .nav-right a {
+            margin-right: 10px;
+            color: #ffffff;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
     {% if request.user.is_authenticated %}
         <nav>
-            <div>
-                <ul>
-                    <li>
-                        <span>Привет, {{ request.user.username }}!!!</span>
-                    </li>
-                    <li>
-                        <a href = "{% url 'settings' %}">Настройки</a>
-                    </li>
-                    <li>
-                        <a href = "{% url 'new_my_task' %}">Создать собственную задачу</a>
-                    </li>
-                    <li>
-                        <a href = "{% url 'my_own_task' %}">Мои личные задачи</a>
-                    </li>
-                    <li>
-                        <a href = "{% url 'calendar' %}">calendar</a>
-                    </li>
+            <div div class="nav-container">
+                <ul class="nav-left">
+                    <li><a href = "{% url 'new_my_task' %}">Создать собственную задачу</a></li>
+                    <li><a href = "{% url 'my_own_task' %}">Мои личные задачи</a></li>
+                    <li><a href = "{% url 'calendar' %}">Календарь</a></li>
                     {% if request.user.is_staff %}
-                        <li>
-                            <a href = "{% url 'new_project' %}">Создать новый проект</a>
-                        </li>  
-                        <li>
-                            <a href = "{% url 'my_project' %}">Мои проекты</a>
-                        </li>                       
+                        <li><a href = "{% url 'new_project' %}">Создать новый проект</a></li>  
+                        <li><a href = "{% url 'my_project' %}">Мои проекты</a></li>                       
                     {% else %}
-                        <li>
-                            <a href = "{% url 'tasksIDo' %}">Задачи которыя я делаю для прокта (проектов)</a>
-                        </li>
-                        
+                        <li><a href = "{% url 'tasksIDo' %}">Задачи которыя я делаю для прокта (проектов)</a></li>
                     {% endif %}
-                    <li>
-                        <form method="post" action="{% url 'logout' %}">
-                            {% csrf_token %}
-                            <button type="submit" >Выйти</button>
-                        </form>
-                    </li>
                 </ul>
+                <div class="nav-right">
+                    <span>Привет, {{ request.user.username }}!!!</span>
+                    <a href = "{% url 'main_page' %}">На главную</a>
+                    <a href = "{% url 'settings' %}">Настройки</a>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Выйти</button>
+                    </form>
+                </div>
             </div>
         </nav>
-        <div>
+        <div class="content">
             {% block content %}
             {% endblock %}
         </div>
