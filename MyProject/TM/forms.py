@@ -158,7 +158,7 @@ class Edit_project_forms(forms.ModelForm):
             raise ValidationError('Дата проекта не может быть в прошлом.')
         
         max_task_end_date = self.instance.tasks.aggregate(Max('due_date'))['due_date__max']
-        if max_task_end_date and end_date < max_task_end_date:
+        if max_task_end_date and end_date > max_task_end_date:
             raise ValidationError(f'Дата окончания проекта должна быть больше даты окончания всех задач в проекте. (Последняя здача проекта {max_task_end_date.strftime('%d %B %Y')})')
 
         return end_date  

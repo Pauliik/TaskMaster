@@ -19,7 +19,7 @@
                 {% for project in projects %}
                     // Добавляем проект в массив событий
                     events.push({
-                        title: '{{ project.name }}: {{ project.description }}',
+                        title: '{{ project.name }}',
                         start: '{{ project.end_date|date:"Y-m-d" }}',
                         color: 'blue' // Цвет для проектов
                     });
@@ -27,7 +27,7 @@
                     // Добавляем задачи в массив событий
                     {% for task in project.tasks.all %}
                         events.push({ // Добавляем задачу
-                            title: '{{ task.name_task }}: {{ task.description }}',
+                            title: '{{ task.name_task }}: {{ task.executor }}/ {{ task.project }}',
                             start: '{{ task.due_date|date:"Y-m-d" }}',
                             color: 'green' // Цвет для задач
                         });
