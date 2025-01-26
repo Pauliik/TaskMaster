@@ -19,6 +19,8 @@ urlpatterns = [
     path('MyProject', views.my_project, name = 'my_project'),
     path('ProjectTasks/<str:project_name>/', views.my_project_task, name = 'my_project_task'),
 
+    path('calendar/', views.calendar_view, name='calendar'),
+
     # Для редактирования 
     path('EditProject/<int:project_id>/', views.edit_project, name = 'edit_project'),
     path('EditTask/<int:task_id>/', views.edit_task, name = 'edit_task'),

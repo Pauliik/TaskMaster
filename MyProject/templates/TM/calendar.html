@@ -1,0 +1,61 @@
+{% extends 'TM/base.html' %}
+
+{% block title %}Document main{% endblock %}
+
+{% block script %}
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
+{% endblock  %}
+
+{% block content %}
+    <div id='calendar'></div>
+
+    <script>
+        {% if request.user.is_staff %}
+            $(document).ready(function() {
+                var events = [];
+                {% for project in projects %}
+                    // Добавляем проект в массив событий
+                    events.push({
+                        title: '{{ project.name }}: {{ project.description }}',
+                        start: '{{ project.end_date|date:"Y-m-d" }}',
+                        color: 'blue' // Цвет для проектов
+                    });
+                    
+                    // Добавляем задачи в массив событий
+                    {% for task in project.tasks.all %}
+                        events.push({ // Добавляем задачу
+                            title: '{{ task.name_task }}: {{ task.description }}',
+                            start: '{{ task.due_date|date:"Y-m-d" }}',
+                            color: 'green' // Цвет для задач
+                        });
+                    {% endfor %}
+                {% endfor %}
+
+                // Инициализируем календарь
+                $('#calendar').fullCalendar({
+                    events: events,
+                    firstDay: 1, // Устанавливаем понедельник как первый день недели
+                });
+        });
+        {% else %}
+            $(document).ready(function() {
+                var tasks = [];
+                {% for task in tasks %}
+                    tasks.push({
+                        title: '{{ task.name_task }}: {{ task.description }}',
+                        start: '{{ task.due_date|date:"Y-m-d" }}',
+                        color: 'blue'
+                    });
+                {% endfor %}
+                
+                $('#calendar').fullCalendar({
+                    events: tasks,
+                    firstDay: 1, // Устанавливаем понедельник как первый день недели
+                });
+            });
+        {% endif %}
+    </script>
+{% endblock %}

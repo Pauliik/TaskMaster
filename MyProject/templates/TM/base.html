@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Document{% endblock %}</title>
+    {% block script  %}{% endblock  %}
 </head>
 <body>
     {% if request.user.is_authenticated %}
@@ -16,6 +17,15 @@
                     <li>
                         <a href = "{% url 'settings' %}">Настройки</a>
                     </li>
+                    <li>
+                        <a href = "{% url 'new_my_task' %}">Создать собственную задачу</a>
+                    </li>
+                    <li>
+                        <a href = "{% url 'my_own_task' %}">Мои личные задачи</a>
+                    </li>
+                    <li>
+                        <a href = "{% url 'calendar' %}">calendar</a>
+                    </li>
                     {% if request.user.is_staff %}
                         <li>
                             <a href = "{% url 'new_project' %}">Создать новый проект</a>
@@ -27,12 +37,7 @@
                         <li>
                             <a href = "{% url 'tasksIDo' %}">Задачи которыя я делаю для прокта (проектов)</a>
                         </li>
-                        <li>
-                            <a href = "{% url 'new_my_task' %}">Создать собственную задачу</a>
-                        </li>
-                        <li>
-                            <a href = "{% url 'my_own_task' %}">Мои личные задачи</a>
-                        </li>
+                        
                     {% endif %}
                     <li>
                         <form method="post" action="{% url 'logout' %}">

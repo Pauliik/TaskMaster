@@ -15,6 +15,15 @@ from .forms import *
 from .filters import *
 
 
+def calendar_view(request):
+    if request.user.is_authenticated:
+        if request.user.is_staff:
+            projects = Project.objects.filter(creator = request.user)
+            return render(request, 'TM/calendar.html', {'projects': projects})
+        else:
+            tasks = Task.objects.filter(executor = request.user)
+            return render(request, 'TM/calendar.html', {'tasks': tasks})
+
 
 # Функция для главной страницы 
 def main_page(request, project_name=None):
