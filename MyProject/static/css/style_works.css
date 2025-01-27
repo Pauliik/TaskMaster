@@ -72,3 +72,71 @@ nav ul li a:hover {
     color: #ffffff;
     text-decoration: none;
 }
+
+.main-container {
+    display: flex;
+    height: 86vh; /* или другое значение в зависимости от ваших предпочтений */
+}
+
+.projects-list {
+    width: 250px; /* Ширина блока с проектами */
+    background: #35424a; /* Цвет фона для лучшего контраста */
+    padding: 10px;
+    border-right: 1px solid #ccc; /* Разделительная линия */            
+}
+.projects-list a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.chat-area {
+    flex: 1; /* Занимает все оставшееся пространство */
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column; /* Чтобы элементы внутри выстраивались вертикально */
+}
+
+.chat-messages {
+    flex: 3; /* Занимает всё доступное пространство для сообщений */
+    overflow-y: auto; /* Добавляет прокрутку по вертикали */
+    margin-bottom: 10px; /* Отступ снизу для формы */
+    border: 1px solid #ccc; /* Рамка вокруг области чата */
+    padding: 10px;
+}
+
+.comment {
+    border-bottom: 1px solid #ddd; /* Разделитель между комментариями */
+    padding: 5px 0; /* Отступы к комментариям */
+}
+
+.comment-author-and-date {
+    display: flex;
+    align-items: center;
+}
+
+.comment-text {
+    padding-left: 10px;
+}
+
+.chat-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+    background: #35424a;
+    color: #ffffff;
+}
+
+.form-block {
+    flex: 1;
+    padding: 10px;
+}
+
+.form-block-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.p {
+    color: #ffffff;
+}
