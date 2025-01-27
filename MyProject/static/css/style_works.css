@@ -284,3 +284,20 @@ a:hover {
 .custom-link:hover {
     text-decoration: underline; /* Подчеркивание при наведении */
 }
+
+ /* Стиль для выделения файлов */
+ .file-link {
+    display: inline-block; /* Отображение в виде блока */
+    padding: 10px; /* Отступ внутри блока */
+    background-color: #e6f7ff; /* Светлый фон для файлов */
+    border: 1px dashed #4A90E2; /* Пунктирная рамка */
+    border-radius: 4px; /* Закругленные углы */
+    color: #4A90E2; /* Цвет текста для файлов */
+    text-decoration: none; /* Убираем подчеркивание */
+    margin-top: 5px; /* Отступ сверху */
+    transition: background-color 0.3s; /* Плавный переход фона */
+}
+
+.file-link:hover {
+    background-color: #d0ebff; /* Изменение фона при наведении */
+}
