@@ -3,14 +3,6 @@
 {% block title %}Document main{% endblock %}
 
 {% block content %}
-
-{% if messages %}
-    <ul class="messages custom-list">
-        {% for message in messages %}
-            <li class="custom-list-item {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
     <form method="get">
         {% csrf_token %}
         <div class="filter-container">
