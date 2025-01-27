@@ -17,7 +17,7 @@ class UserRegistrationForm(UserCreationForm):
         email = self.cleaned_data.get('email')
         if email and User.objects.filter(email=email).exists():
             raise ValidationError('Пользователь с таким адресом электронной почты уже существует.')
-        return email
+        return email   
 
 # используется для new_project
 class New_project_forms(forms.ModelForm):
@@ -34,7 +34,7 @@ class New_project_forms(forms.ModelForm):
             raise ValidationError('Дата проекта не может быть в прошлом.')
         return end_date
 
-
+# используется для new_project
 class New_projectTask_forms(forms.ModelForm):
     executor = forms.CharField(label='Исполнитель', max_length=100)
     class Meta:     
