@@ -10,7 +10,45 @@
 {% endblock  %}
 
 {% block content %}
+    <style>
+       .container {
+            display: flex;            /* Используем Flexbox для расположения */
+            justify-content: space-between; /* Распределяем элементы равномерно */
+            width: 100%;             /* Ширина контейнера на всю ширину родителя */
+            max-width: 1000px;      /* Максимальная ширина (по желанию) */
+            margin: 0 auto;         /* Центруем контейнер по горизонтали */
+        }
+
+        .color-info {
+            flex: 1;                 /* Делаем элементы гибкими */
+            text-align: center;      /* Центрируем текст внутри каждого элемента */
+        }
+
+        .task-color{
+            color: blue;
+        }
+
+        .project-color {
+            color: green;
+        }
+
+        .my-task-color {
+            color: red;
+        }
+    </style>
     <div id='calendar'></div>
+
+    <div class="container">
+        {% if request.user.is_staff %}
+            <p class="color-info project-color">Синий цвет - это проекты</p>
+            <p class="color-info task-color">Зеленый цвет - это задачи</p>
+            <p class="color-info my-task-color">Красный цвет - это мои задачи</p>
+        {% else %}
+            <p class="color-info task-color">Зеленый цвет - это рабочии задачи</p>
+            <p class="color-info my-task-color">Красный цвет - это моих задачи</p>
+        {% endif %}
+    </div>
+
     <script>
         {% if request.user.is_staff %}
             $(document).ready(function() {
@@ -20,7 +58,7 @@
                     events.push({
                         title: '{{ project.name }}',
                         start: '{{ project.end_date|date:"Y-m-d" }}',
-                        color: 'blue' // Цвет для проектов
+                        color: 'green' // Цвет для проектов
                     });
                     
                     // Добавляем задачи в массив событий
@@ -28,9 +66,17 @@
                         events.push({ // Добавляем задачу
                             title: '{{ task.name_task }}: {{ task.executor }}/ {{ task.project }}',
                             start: '{{ task.due_date|date:"Y-m-d" }}',
-                            color: 'green' // Цвет для задач
+                            color: 'blue' // Цвет для задач
                         });
                     {% endfor %}
+                {% endfor %}
+
+                {% for mytask in mytasks %}
+                    events.push({
+                        title: '{{ mytask.name_task }}:',
+                        start: '{{ mytask.due_date|date:"Y-m-d" }}',
+                        color: 'red'
+                    });
                 {% endfor %}
 
                 // Инициализируем календарь
@@ -38,20 +84,28 @@
                     events: events,
                     firstDay: 1, // Устанавливаем понедельник как первый день недели
                 });
-        });
+            });
         {% else %}
             $(document).ready(function() {
-                var tasks = [];
+                var events = [];
                 {% for task in tasks %}
-                    tasks.push({
-                        title: '{{ task.name_task }}: {{ task.description }}',
-                        start: '{{ task.due_date|date:"Y-m-d" }}',
-                        color: 'blue'
+                    events.push({
+                            title: '{{ task.name_task }}:',
+                            start: '{{ task.due_date|date:"Y-m-d" }}',
+                            color: 'blue'
+                        });
+                {% endfor %}
+
+                {% for mytask in mytasks %}
+                    events.push({
+                        title: '{{ mytask.name_task }}:',
+                        start: '{{ mytask.due_date|date:"Y-m-d" }}',
+                        color: 'red'
                     });
                 {% endfor %}
                 
                 $('#calendar').fullCalendar({
-                    events: tasks,
+                    events: events,
                     firstDay: 1, // Устанавливаем понедельник как первый день недели
                 });
             });

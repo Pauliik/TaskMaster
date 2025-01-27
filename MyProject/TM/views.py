@@ -14,16 +14,16 @@ from .models import *
 from .forms import *
 from .filters import *
 
-
+# Функция для календаря 
 def calendar_view(request):
     if request.user.is_authenticated:
+        mytasks = Mytask.objects.filter(creator = request.user)
         if request.user.is_staff:
             projects = Project.objects.filter(creator = request.user)
-            return render(request, 'TM/calendar.html', {'projects': projects})
+            return render(request, 'TM/calendar.html', {'projects': projects, 'mytasks': mytasks})
         else:
             tasks = Task.objects.filter(executor = request.user)
-            return render(request, 'TM/calendar.html', {'tasks': tasks})
-
+            return render(request, 'TM/calendar.html', {'tasks': tasks, 'mytasks': mytasks})
 
 # Функция для главной страницы 
 def main_page(request, project_name=None):
