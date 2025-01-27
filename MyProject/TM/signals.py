@@ -68,7 +68,7 @@ def my_job():
         for task in tasks:           
             send_mail(
                 f'Уважаемый {task.executor.username}',
-                f'Завта до 15:00 нужно сдать задачу {task.name_task}',
+                f'Завтра до 15:00 нужно сдать задачу {task.name_task}',
                 'pasha@inbox.ru',
                 [task.executor.email],
                 fail_silently=False,

@@ -75,7 +75,7 @@ class New_projectTask_forms(forms.ModelForm):
             raise ValidationError('Дата задания не может быть в прошлом.')
         return due_date
 
-# Форма для создания дополнительных задачь к проекту 
+# Форма для создания дополнительных задач к проекту 
 class New_task_forms(forms.ModelForm):
     executor = forms.CharField(label='Исполнитель', max_length=100)
     class Meta:
@@ -137,7 +137,7 @@ class New_my_task_form(forms.ModelForm):
             raise ValidationError('Дата задания не может быть в прошлом.')
         return due_date    
 
-# Форма для моих личных подзадачь 
+# Форма для моих личных подзадач 
 class New_my_subtask_forms(forms.ModelForm):
     class Meta:
         model = Mysubtask
@@ -159,7 +159,7 @@ class Edit_project_forms(forms.ModelForm):
         
         max_task_end_date = self.instance.tasks.aggregate(Max('due_date'))['due_date__max']
         if max_task_end_date and end_date > max_task_end_date:
-            raise ValidationError(f'Дата окончания проекта должна быть больше даты окончания всех задач в проекте. (Последняя здача проекта {max_task_end_date.strftime('%d %B %Y')})')
+            raise ValidationError(f'Дата окончания проекта должна быть больше даты окончания всех задач в проекте. (Последняя задача проекта {max_task_end_date.strftime('%d %B %Y')})')
 
         return end_date  
 
@@ -215,7 +215,7 @@ class Edit_task_form(forms.ModelForm):
         
         project_end_date = self.instance.project.end_date
         if due_date > project_end_date:
-            raise ValidationError(f'Дата сдачи задачи не может быть после сдачи проекта! (Дата окончания прокта {project_end_date.strftime('%d %B %Y')})')
+            raise ValidationError(f'Дата сдачи задачи не может быть после сдачи проекта! (Дата окончания проекта {project_end_date.strftime('%d %B %Y')})')
 
         return due_date
 

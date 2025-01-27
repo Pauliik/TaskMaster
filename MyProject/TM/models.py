@@ -6,7 +6,7 @@ from uuid import uuid4
 class Project(models.Model):
     name = models.CharField(max_length = 255, unique = True, verbose_name = 'Название проекта')
     description = models.TextField(verbose_name = 'Описание проекта')
-    end_date = models.DateField(verbose_name = 'Дфта окончания')
+    end_date = models.DateField(verbose_name = 'Дата окончания')
     creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'created_projects', verbose_name = 'Создатель')
     key = models.CharField(max_length=64, unique=True, default=uuid4)
     date_creation = models.DateTimeField(auto_now_add=True, verbose_name = 'Дата создания')
@@ -34,7 +34,7 @@ class Task(models.Model):
 
     project = models.ForeignKey(Project, on_delete = models.CASCADE, related_name = 'tasks', verbose_name = 'Проект')
     name_task = models.CharField(max_length= 255, verbose_name = 'Название задачи')
-    description = models.TextField(blank= True, verbose_name = 'Опмсание задачи')
+    description = models.TextField(blank= True, verbose_name = 'Описание  задачи')
     priority = models.CharField(max_length = 15, choices = PRIORITY, default = 'medium', verbose_name = 'Приоритет')
     status = models.CharField(max_length = 20, choices = ACCOMPLISHMENTS_STATUS, default = 'in_progress', verbose_name = 'Статус')
     executor = models.ForeignKey(User, on_delete = models.SET_NULL, null = True, blank = True, related_name = 'assigned_tasks', verbose_name = 'Исполнитель')
@@ -53,7 +53,7 @@ class Task(models.Model):
 class Subtask(models.Model):
     task = models.ForeignKey(Task, on_delete = models.CASCADE, related_name = 'subtask', verbose_name = 'Задача')
     name_sub = models.CharField(max_length = 255, verbose_name = 'Название подзадачи')
-    description = models.TextField(null = True, blank= True, verbose_name = 'Опмсание задачи')
+    description = models.TextField(null = True, blank= True, verbose_name = 'Описание задачи')
     creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'creator_subtask', verbose_name = 'Создатель')
     status = models.BooleanField(default = False, verbose_name = 'Статус выполнения')
     date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Дата создания')
@@ -103,7 +103,7 @@ class Mytask(models.Model):
         ('low', 'Низкий')
     ]
     name_task = models.CharField(max_length= 255, verbose_name = 'Название задачи')
-    description = models.TextField(blank= True, verbose_name = 'Опмсание задачи')
+    description = models.TextField(blank= True, verbose_name = 'Описание задачи')
     priority = models.CharField(max_length = 15, choices = PRIORITY, default = 'medium', verbose_name = 'Приоритет')
     due_date = models.DateField(verbose_name = 'Срок выполнения')
     creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'mytask', verbose_name = 'Создатель')
@@ -120,7 +120,7 @@ class Mytask(models.Model):
 class Mysubtask(models.Model):
     task = models.ForeignKey(Mytask, on_delete = models.CASCADE, related_name = 'mysubtasks', verbose_name = 'Задача')
     name_subtask = models.CharField(max_length = 255, verbose_name = 'Название подзадачи')
-    description = models.TextField(null = True, blank= True, verbose_name = 'Опмсание задачи')
+    description = models.TextField(null = True, blank= True, verbose_name = 'Описание задачи')
     #creator = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'creator_mysubtasks', verbose_name = 'Создатель')
     status = models.BooleanField(default = False, verbose_name = 'Статус выполнения')
     date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Дата создания')

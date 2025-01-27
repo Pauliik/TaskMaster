@@ -94,7 +94,7 @@ def new_project(request):
                 task.save()
                 send_mail(
                     'У вас появилась новое задание!',
-                    f'Руководитель {request.user} выдал вам задание {task.name_task} котророе нужно выполнить до {task.due_date}',
+                    f'Руководитель {request.user} выдал вам задание {task.name_task} которое нужно выполнить до {task.due_date}',
                     'pasha@inbox.ru',
                     [task.executor.email],
                     fail_silently=False,
@@ -121,7 +121,7 @@ def new_task(request, project_name):
                 task.save()
                 send_mail(
                     'У вас появилась новое задание!',
-                    f'Руководитель {request.user} выдал вам задание {task.name_task} котророе нужно выполнить до {task.due_date}',
+                    f'Руководитель {request.user} выдал вам задание {task.name_task} которое нужно выполнить до {task.due_date}',
                     'pasha@inbox.ru',
                     [task.executor.email],
                     fail_silently=False,
@@ -176,7 +176,7 @@ def tasksIDo(request):
 
                 send_mail(
                     f'Увожвемый {request.user} ',
-                    f'Рабочий {request.user} переслал вам {file_task.file} файл с выполненой задачей {task.name_task} которая находится в проекте {task.project.name}',
+                    f'Рабочий {request.user} переслал вам {file_task.file} файл с выполненной задачей {task.name_task} которая находится в проекте {task.project.name}',
                     'pasha@inbox.ru',
                     [task.project.creator.email],
                     fail_silently=False,
@@ -232,7 +232,7 @@ def new_my_task(request):
         form = New_my_task_form()
     return render(request, 'TM/new_my_task.html', {'form': form,})
 
-# Создаем собственные подзодачи
+# Создаем собственные подзадачи
 def new_my_subtask(request, task_id):
     mytask = get_object_or_404(Mytask, id = task_id)
     
@@ -304,7 +304,7 @@ def edit_task(request, task_id):
 
                     send_mail(
                         f'Уважаемый {task.executor.username}',
-                        f'Руководитель {request.user} передал вам выполнять новое задания {task.name_task} заместо {old_name}',
+                        f'Руководитель {request.user} передал вам выполнять новое задания {task.name_task} вместо {old_name}',
                         'pasha@inbox.ru',
                         [task.executor.email],
                         fail_silently=False,
