@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style_works.css' %}">
     <title>{% block title %}Document{% endblock %}</title>
-    {% block script  %}{% endblock  %}
 </head>
 <body>
+    {% block script  %}{% endblock  %}
     {% if request.user.is_authenticated %}
         <nav>
             <div div class="nav-container">
