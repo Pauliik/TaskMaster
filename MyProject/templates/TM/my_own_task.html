@@ -2,7 +2,7 @@
 
 {% block title %}Document main{% endblock %}
 
-{% block content %}   
+{% block content %}  
     <form method="get">
         {% csrf_token %}
         <div class="filter-container">           
@@ -38,9 +38,7 @@
             
             <div class="button-container">
                 <button type="submit">Найти</button>
-                <a href="{% url 'my_own_task' %}">
-                    <button type="button">Сбросить</button>
-                </a>
+                <a href="{% url 'my_own_task' %}"><button type="button">Сбросить</button></a>
             </div>
         </div>
     </form>
@@ -48,37 +46,26 @@
     {% if check == True %}
         {% if my_task %}              
             {% for task in my_task %}  
-                <div class="task">
-                    <ul>
-                        <li>
-                            <h3>Название задачи: {{ task.name_task }} </h3>  
-                        </li>
-                    </ul>
-                    <ul>
-                        <ol>
-                            <li><h4>Описание задачи: {{ task.description }}</h4></li>
-                            <li><h4>Приоритет: {{ task.get_priority_display }}</h4></li>
-                            <li><h4>Срок выполнения: {{ task.due_date }}</h4></li>
-                            <li>
-                                <a href="{% url 'edit_my_task' task.id %}">Редактировать задачу</a> | 
-                                <a href="{% url 'delete_my_task' task.id %}">Удалить задачу</a>
-                            </li>
-                            {% for subtask in task.mysubtasks.all %}
-                                <div class="subtask">
-                                    <h4>Название подзадачи: {{ subtask.name_subtask }}</h4>
-                                    <ul>
-                                        <li><h4>Описание подзадачи: {{ subtask.description }}</h4></li>
-                                        <li><h4>Статус подзадачи: {{ subtask.status }}</h4></li>
-                                        <li>
-                                            <a href="{% url 'delete_my_subtask' subtask.id %}">Удалить подзадачу</a> | 
-                                            <a href="{% url 'edit_mysubtask' subtask.id %}">Редактировать подзадачу</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            {% endfor %}
-                            <a href="{% url 'new_my_subtask' task.id %}">Создать новую подзадачу</a>
-                        </ol>
-                    </ul>
+                <div class="task">  
+                    <h3>Название задачи: {{ task.name_task }} </h3>  
+                    <h4>Описание задачи: {{ task.description }}</h4>
+                    <h4>Приоритет: {{ task.get_priority_display }}</h4>
+                    <h4>Срок выполнения: {{ task.due_date }}</h4>
+                    <div class="project-actions">
+                        <a class="custom-link" href="{% url 'edit_my_task' task.id %}">Редактировать задачу</a> 
+                        <a class="custom-link" href="{% url 'delete_my_task' task.id %}">Удалить задачу</a>
+                        <a class="custom-link" href="{% url 'new_my_subtask' task.id %}">Создать новую подзадачу</a>
+                    </div>
+                    {% for subtask in task.mysubtasks.all %}
+                        <div class="subtask">
+                            <h4>Название подзадачи: {{ subtask.name_subtask }}</h4>
+                            <h4>Описание подзадачи: {{ subtask.description }}</h4>
+                            <h4>Статус подзадачи: {{ subtask.status }}</h4>
+                            <div class="project-actions">
+                            <a class="custom-link" href="{% url 'delete_my_subtask' subtask.id %}">Удалить подзадачу</a>  
+                            <a class="custom-link" href="{% url 'edit_mysubtask' subtask.id %}">Редактировать подзадачу</a>
+                        </div>
+                    {% endfor %}
                 </div> 
             {% endfor %} 
         {% else %}
@@ -87,6 +74,4 @@
     {% else %}
         <p class="notification">У вас нет назначенных задач!!!</p>
     {% endif %}
-
-
 {% endblock %}

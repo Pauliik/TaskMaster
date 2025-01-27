@@ -26,11 +26,12 @@ nav ul li a:hover {
     text-decoration: underline;
 }
 .content {
-    margin-top: 20px;
+    /* max-width: 1200px;  Максимальная ширина контейнера */
+    margin: auto;
     padding: 20px;
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff; /* Белый фон для контейнера */
+    border-radius: 10px; /* Закругленные углы контейнера */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Тень для контейнера */
 }
 
 .nav-container {
@@ -258,4 +259,28 @@ a {
 
 a:hover {
     text-decoration: underline; 
+}
+
+.project-actions {
+    margin-top: 10px; 
+}
+
+.project-actions a {
+    margin-right: 15px; /* Правый отступ для ссылок на действия */
+    color: #4A90E2; /* Цвет ссылок для действий */
+    font-weight: normal; /* Обычный шрифт для ссылок действия */
+}
+
+.project-actions a:hover {
+    text-decoration: underline; /* Подчеркивание при наведении на действие */
+}
+
+.custom-link {
+    text-decoration: none; /* Убираем подчеркивание */
+    color: #4A90E2; /* Цвет ссылки */
+    font-weight: bold; /* Жирный шрифт для ссылок */
+}
+
+.custom-link:hover {
+    text-decoration: underline; /* Подчеркивание при наведении */
 }
