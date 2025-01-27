@@ -62,8 +62,9 @@
                             <h4>Описание подзадачи: {{ subtask.description }}</h4>
                             <h4>Статус подзадачи: {{ subtask.status }}</h4>
                             <div class="project-actions">
-                            <a class="custom-link" href="{% url 'delete_my_subtask' subtask.id %}">Удалить подзадачу</a>  
-                            <a class="custom-link" href="{% url 'edit_mysubtask' subtask.id %}">Редактировать подзадачу</a>
+                                <a class="custom-link" href="{% url 'delete_my_subtask' subtask.id %}">Удалить подзадачу</a>  
+                                <a class="custom-link" href="{% url 'edit_mysubtask' subtask.id %}">Редактировать подзадачу</a>
+                            </div>
                         </div>
                     {% endfor %}
                 </div> 
